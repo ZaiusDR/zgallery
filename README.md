@@ -26,10 +26,6 @@ If you don't want to install node package manager locally:
 
 ## Testing
 
-First connect to the container with:
+Run:
 
-`docker exec -it zgallery bash`
-
-And run:
-
-`npm test`
+`docker exec -it zgallery npm test`
