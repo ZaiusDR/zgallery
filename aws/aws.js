@@ -6,29 +6,51 @@ var s3 = new aws.S3();
 
 var envPath = process.env.ENVIRONMENT + '/';
 
-function parseAlbumNames(albumData) {
-    var albumList = [];
-    albumData.Contents.forEach((albumInfo) => {
-        albumName = albumInfo['Key'].split('/')[1];
-        albumList.push(albumName);
-    });
-    return albumList;
-}
+
+const params = {
+  Bucket: process.env.AWS_BUCKET_NAME,
+  Prefix: envPath,
+  StartAfter: envPath
+};
+
+const listBucket = s3.listObjectsV2(params).promise();
+
+function parseS3Items(s3ItemsData, albumId) {
+  var itemSet = new Set();
+  s3ItemsData.Contents.forEach((item) => {
+    if (albumId === null) {
+      if (item['Key'].endsWith('/')) {
+        albumName = item['Key'].split('/')[1];
+        itemSet.add(albumName);
+      }
+    }
+    else {
+      if (!item['Key'].endsWith('/') && item['Key'].includes(albumId)) {
+        photoName = item['Key'].split('/')[2];
+        itemSet.add(photoName);
+      }
+    }
+  });
+  return [...itemSet];
+};
 
 function getAlbums() {
-    var params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Prefix: envPath,
-        StartAfter: envPath
-    }
-
-    listBuckets = s3.listObjectsV2(params).promise();
-
-    return listBuckets.then((data) => {
-        return parseAlbumNames(data);
+    return listBucket.then((data) => {
+        return parseS3Items(data, null);
     }).catch((err) => {
         console.log(err);
     });
 }
 
-module.exports = getAlbums;
+function getPictures(albumName) {
+    return listBucket.then((data) => {
+      return parseS3Items(data, albumName);
+    }).catch((err) => {
+      console.log(err);
+    });
+}
+
+module.exports = {
+  getAlbums: getAlbums,
+  getPictures: getPictures
+};

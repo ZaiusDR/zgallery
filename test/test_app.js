@@ -29,3 +29,16 @@ describe('GET /albums', () => {
     });
   });
 });
+
+describe('GET /albums/:id', () => {
+  it('it should GET a list of pictures inside an album', (done) => {
+    chai.request('http://localhost:3000')
+      .get('/albums/album0')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('array').to.have.lengthOf(2);
+        res.text.should.equal('["photo0.jpg","photo1.jpg"]');
+        done();
+    });
+  });
+});

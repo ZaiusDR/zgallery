@@ -3,14 +3,22 @@ var router = express.Router();
 
 var aws = require('../aws/aws');
 
-/* GET users listing. */
+/* GET albums listing. */
 router.get('/', function(req, res, next) {
-  aws().then((data) => {
+  aws.getAlbums().then((data) => {
     res.json(data);
   }).catch((err) => {
     console.log(err);
   });
 });
 
+/* GET picture listing in an album. */
+router.get('/:id', function(req, res, next) {
+  aws.getPictures(req.params.id).then((data) => {
+    res.json(data);
+  }).catch((err) => {
+    console.log(err);
+  });
+});
 
 module.exports = router;
