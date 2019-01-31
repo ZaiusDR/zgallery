@@ -19,10 +19,16 @@ If you don't want to install node package manager locally:
 
 ### Run container
 
-`docker run --rm --name zgallery -d -v "$PWD":/src -p 3000:3000 -p 9229:9229 zgallery`
+`docker run --name zgallery -d -v "$PWD":/src -p 8000:3000 -p 9229:9229 zgallery`
 
 * Connect to ZGallery app from http://localhost:3000
 * Inspector port 9229
+
+Then you can stop/start the container again with:
+
+`docker stop zgallery``
+
+`docker start zgallery`
 
 ## Testing
 

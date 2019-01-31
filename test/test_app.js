@@ -1,7 +1,7 @@
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
-let expect = chai.expect;
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const should = require('chai').should();
+const expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -17,7 +17,7 @@ describe('Test REST API', () => {
           expect(err).to.be.null;
           res.should.have.status(200);
           done();
-      });
+        });
     });
   });
 
@@ -30,7 +30,7 @@ describe('Test REST API', () => {
           res.body.should.be.a('array').to.have.lengthOf(2);
           res.text.should.equal('["album0","album1"]');
           done();
-      });
+        });
     });
   });
 
@@ -43,7 +43,7 @@ describe('Test REST API', () => {
           res.body.should.be.a('array').to.have.lengthOf(2);
           res.text.should.equal('["photo0.jpg","photo1.jpg"]');
           done();
-      });
+        });
     });
   });
 
@@ -51,9 +51,7 @@ describe('Test REST API', () => {
     it('it should create new_album', (done) => {
       chai.request(serverUrl)
         .post('/albums')
-        .send({
-          'name': 'new_album'
-        })
+        .send({'name': 'new_album'})
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.be.a('object');
@@ -76,15 +74,13 @@ describe('Test REST API', () => {
     it('it should warn an album exists', (done) => {
       chai.request(serverUrl)
         .post('/albums')
-        .send({
-          'name': 'album0'
-        })
+        .send({'name': 'album0'})
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.be.a('object');
           res.text.should.equal('Album album0 already exists.');
           done();
-      });
+        });
     });
   });
 
@@ -92,12 +88,11 @@ describe('Test REST API', () => {
     it('it should create to_delete_album', (done) => {
       chai.request(serverUrl)
         .post('/albums')
-        .send({
-          'name': 'to_delete_album'
-        }).end((err, res) => {
+        .send({'name': 'to_delete_album'})
+        .end((err, res) => {
           res.should.have.status(201);
           done();
-      });
+        });
     });
 
     it('it should delete to_delete_album', (done) => {
@@ -107,7 +102,7 @@ describe('Test REST API', () => {
           res.should.have.status(200);
           res.text.should.equal('Album to_delete_album successfully deleted.');
           done();
-      });
+        });
     });
 
     it('it should warn an album doesn\'t exist', (done) => {
@@ -117,7 +112,7 @@ describe('Test REST API', () => {
           res.should.have.status(400);
           res.text.should.equal('Album non_existent_album does not exist.');
           done();
-      });
+        });
     });
   });
 });

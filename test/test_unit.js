@@ -1,4 +1,4 @@
-var rewire = require("rewire");
+var rewire = require('rewire');
 
 var aws = rewire('../aws/aws');
 
@@ -16,12 +16,12 @@ const s3ItemsData = {Contents : [
 describe('Test parseS3Items', () => {
   it('it should return a list of album names', () => {
     parseS3Items(s3ItemsData, null).should.deep.equal(
-      ["folder0","folder1"]
+      ['folder0','folder1']
     );
   });
   it('it should return a list of photo names for album0', () => {
     parseS3Items(s3ItemsData, 'folder0').should.deep.equal(
-      ["photo0.jpg","photo1.jpg"]
-    )
-  })
+      ['photo0.jpg','photo1.jpg']
+    );
+  });
 });
