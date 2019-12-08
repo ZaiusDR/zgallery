@@ -30,6 +30,10 @@ Then you can stop/start the container again with:
 
 `docker start zgallery`
 
+## Deploy AWS Pipeline
+
+`aws cloudformation update-stack --stack-name "zgallery-pipeline" --template-body file://infrastructure/pipeline.yaml --capabilities CAPABILITY_IAM`
+
 ## Testing
 
 Run:

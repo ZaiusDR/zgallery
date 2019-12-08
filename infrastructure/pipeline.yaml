@@ -6,6 +6,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: 'zgallery-pipeline'
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 15
+            Id: 'ExpireAfter15Days'
+            Status: Enabled
 
   ZGalleryPipelineBucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
@@ -93,7 +98,7 @@ Resources:
                 Provider: CloudFormation
                 Version: 1
               Configuration:
-                ActionMode: CREATE_UPDATE
+                ActionMode: REPLACE_ON_FAILURE
                 StackName: zgallery-infrastructure
                 RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
                 Capabilities: CAPABILITY_IAM
@@ -126,7 +131,14 @@ Resources:
               - Effect: Allow
                 Action:
                   - 'cloudformation:DescribeStacks'
+                  - 'cloudformation:CreateStack'
+                  - 'cloudformation:DeleteStack'
+                  - 'cloudformation:UpdateStack'
                 Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'iam:PassRole'
+                Resource: !Sub 'arn:aws:iam::${AWS::AccountId}:role/zgallery-pipeline-*'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
     Type: AWS::IAM::Role
@@ -147,5 +159,17 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - 'ec2:LaunchInstance'
+                  - 'ec2:RunInstances'
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:TerminateInstances'
+                  - 'ec2:DescribeImages'
+                  - 'ec2:CreateSecurityGroup'
+                  - 'ec2:DescribeSecurityGroups'
+                  - 'ec2:DeleteSecurityGroup'
+                  - 'ec2:AuthorizeSecurityGroupIngress'
                 Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'ssm:GetParameters'
+                Resource:
+                  - 'arn:aws:ssm:*:*:parameter/aws/service/*'
