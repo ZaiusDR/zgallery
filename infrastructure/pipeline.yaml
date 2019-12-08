@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Deploys the Pipeline for the ZGallery Project"
+
+Resources:
+  ZGalleryPipelineBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 'zgallery-pipeline'
+
+  ZGalleryPipelineBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref ZGalleryPipelineBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: DenyUnEncryptedObjectUploads
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:PutObject'
+            Resource: !Join
+              - ''
+              - - !GetAtt
+                  - ZGalleryPipelineBucket
+                  - Arn
+                - /*
+            Condition:
+              StringNotEquals:
+                's3:x-amz-server-side-encryption': 'aws:kms'
+          - Sid: DenyInsecureConnections
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource: !Join
+              - ''
+              - - !GetAtt
+                  - ZGalleryPipelineBucket
+                  - Arn
+                - /*
+            Condition:
+              Bool:
+                'aws:SecureTransport': false
+
+  AppPipelineWebhook:
+    Type: AWS::CodePipeline::Webhook
+    Properties:
+      Authentication: GITHUB_HMAC
+      AuthenticationConfiguration:
+        SecretToken: '{{resolve:ssm:/github/token:1}}'
+      Filters:
+        - JsonPath: "$.ref"
+          MatchEquals: refs/heads/master
+      TargetPipeline: !Ref ZGalleryPipeline
+      TargetAction: clone-repository
+      Name: ZGalleryWebhook
+      TargetPipelineVersion: !GetAtt ZGalleryPipeline.Version
+      RegisterWithThirdParty: true
+
+  ZGalleryPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: zgallery-pipeline
+      RoleArn: !GetAtt ZGalleryPipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ZGalleryPipelineBucket
+      Stages:
+        - Name: CloneRepository
+          Actions:
+            - Name: clone-repository
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: '{{resolve:ssm:/github/user:2}}'
+                Repo: zgallery
+                Branch: master
+                OAuthToken: '{{resolve:ssm:/github/token:1}}'
+                PollForSourceChanges: false
+              OutputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+        - Name: CreateInfra
+          Actions:
+            - Name: create-infra
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: zgallery-infrastructure
+                RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
+                Capabilities: CAPABILITY_IAM
+                TemplatePath: SourceOutput::infrastructure/zgallery-infra.yaml
+              RunOrder: 1
+
+  ZGalleryPipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: ZGalleryPipelinePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource:
+                  - !GetAtt ZGalleryPipelineBucket.Arn
+                  - !Sub '${ZGalleryPipelineBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - 'cloudformation:DescribeStacks'
+                Resource: '*'
+
+  ZGalleryCreateInfraStepPipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: ZGalleryCloudFormationRole
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ec2:LaunchInstance'
+                Resource: '*'
