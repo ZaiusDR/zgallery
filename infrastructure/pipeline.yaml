@@ -46,6 +46,52 @@ Resources:
               Bool:
                 'aws:SecureTransport': false
 
+  ZGalleryUnitTestBuildProjectServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+      Policies:
+        - PolicyName: CodeBuildServicePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource: !Sub "arn:aws:s3:::${ZGalleryPipelineBucket}/*"
+
+  ZGalleryUnitTestBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: unit-tests
+      Artifacts:
+        Type: CODEPIPELINE
+      Description: Run UnitTests for ZGallery backend
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+      Source:
+        Type: CODEPIPELINE
+      ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
+
   AppPipelineWebhook:
     Type: AWS::CodePipeline::Webhook
     Properties:
@@ -104,6 +150,19 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 TemplatePath: SourceOutput::infrastructure/zgallery-infra.yaml
               RunOrder: 1
+        - Name: UnitTest
+          Actions:
+            - Name: unit-test
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: unit-tests
+              RunOrder: 1
 
   ZGalleryPipelineServiceRole:
     Type: AWS::IAM::Role
@@ -139,6 +198,11 @@ Resources:
                 Action:
                   - 'iam:PassRole'
                 Resource: !Sub 'arn:aws:iam::${AWS::AccountId}:role/zgallery-pipeline-*'
+              - Effect: Allow
+                Action:
+                  - 'codebuild:StartBuild'
+                  - 'codebuild:BatchGetBuilds'
+                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/unit-tests'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
     Type: AWS::IAM::Role
