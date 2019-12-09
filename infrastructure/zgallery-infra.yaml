@@ -7,9 +7,76 @@ Parameters:
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Resources:
-  ZGallerySecurityGroup:
+  ZGalleryALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      GroupName: 'zgallery-alb-sg'
+      GroupDescription: 'Allow http for ALB'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ZGalleryALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: zgallery-alb
+      SecurityGroups:
+        - !GetAtt ZGalleryALBSecurityGroup.GroupId
+      Subnets:
+        - subnet-0446e35e
+        - subnet-5de38815
+        - subnet-81e07be7
+
+  ZGalleryALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ZGalleryALBTargetGroup
+      LoadBalancerArn: !Ref ZGalleryALB
+      Port: 80
+      Protocol: HTTP
+
+  ZGalleryALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: zgallery-alb-tg
+      Port: 80
+      Protocol: HTTP
+      TargetType: instance
+      VpcId: vpc-f4c2ec92
+
+  ZGalleryLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: zgallery-launch-template
+      LaunchTemplateData:
+        ImageId: !Ref LatestAmiId
+        InstanceType: t2.micro
+        SecurityGroups:
+          - !Ref ZGalleryInstanceSecurityGroup
+
+  ZGalleryASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: zgallery-asg
+      AvailabilityZones:
+        - eu-west-1a
+        - eu-west-1b
+        - eu-west-1c
+      DesiredCapacity: 1
+      MinSize: 1
+      MaxSize: 2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ZGalleryLaunchTemplate
+        Version: 1
+
+  ZGalleryInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'zgallery-instance-sg'
       GroupDescription: 'Allow http'
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -22,4 +89,7 @@ Resources:
     Properties:
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref ZGalleryInstanceSecurityGroup
+
 
