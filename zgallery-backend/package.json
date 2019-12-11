@@ -1,0 +1,32 @@
+{
+  "name": "zgallery-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "nodemon": "nodemon --inspect=0.0.0.0:9229 bin/www",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.586.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "aws-sdk-mock": "^4.5.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "mocha": "^6.2.2",
+    "nodemon": "^2.0.1"
+  }
+}
