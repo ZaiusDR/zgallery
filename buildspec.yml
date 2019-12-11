@@ -9,5 +9,4 @@ phases:
       - npm i
   build:
     commands:
-      - cd zgallery-backend
       - npm test
