@@ -5,7 +5,9 @@ phases:
     runtime-versions:
       nodejs: 10
     commands:
+      - cd zgallery-backend
       - npm i
   build:
     commands:
+      - cd zgallery-backend
       - npm test
