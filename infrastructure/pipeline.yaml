@@ -179,7 +179,7 @@ Resources:
                 Provider: CodeBuild
                 Version: 1
               Configuration:
-                ProjectName: unit-tests
+                ProjectName: build-zgallery-backend
               RunOrder: 1
 
   ZGalleryPipelineServiceRole:
@@ -220,7 +220,7 @@ Resources:
                 Action:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
-                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/unit-tests'
+                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-backend'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
     Type: AWS::IAM::Role
@@ -281,6 +281,6 @@ Resources:
                 Action:
                   - ecr:DescribeRepositories
                   - ecr:CreateRepository
-                  - ecr:DeleteRepository'
+                  - ecr:DeleteRepository
                   - ecr:PutLifecyclePolicy
                 Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-ecr

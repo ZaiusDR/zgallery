@@ -9,6 +9,10 @@ phases:
       - cd $APP_NAME
       - echo Installing dependencies
       - npm i
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   build:
     commands:
       - echo Build started on `date`
