@@ -5,6 +5,13 @@ Parameters:
   LatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  RandomId:
+    Type: String
+    Default: start
+  Deploy:
+    Type: String
+    Default: false
+    AllowedValues: [true, false]
 
 Resources:
   ZGalleryALBSecurityGroup:
@@ -72,7 +79,7 @@ Resources:
   ZGalleryLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: zgallery-launch-template
+      LaunchTemplateName: !Sub 'zgallery-launch-template-${RandomId}'
       LaunchTemplateData:
         ImageId: !Ref LatestAmiId
         InstanceType: t2.micro

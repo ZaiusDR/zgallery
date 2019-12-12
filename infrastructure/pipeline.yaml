@@ -187,6 +187,28 @@ Resources:
               Configuration:
                 ProjectName: build-zgallery-backend
               RunOrder: 1
+        - Name: DeployDev
+          Actions:
+              - Name: deploy-dev
+                InputArtifacts:
+                  - Name: SourceOutput
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: 1
+                Configuration:
+                  ActionMode: REPLACE_ON_FAILURE
+                  StackName: zgallery-infrastructure
+                  RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
+                  Capabilities: CAPABILITY_IAM
+                  TemplatePath: SourceOutput::infrastructure/zgallery-infra.yaml
+                  ParameterOverrides: |
+                    {
+                      "Deploy": "true",
+                      "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]}
+                    }
+                RunOrder: 1
 
   ZGalleryPipelineServiceRole:
     Type: AWS::IAM::Role
