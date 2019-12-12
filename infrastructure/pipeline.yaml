@@ -5,15 +5,15 @@ Resources:
   ZGalleryPipelineBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: 'zgallery-pipeline'
+      BucketName: zgallery-pipeline
       LifecycleConfiguration:
         Rules:
           - ExpirationInDays: 15
-            Id: 'ExpireAfter15Days'
+            Id: ExpireAfter15Days
             Status: Enabled
 
   ZGalleryPipelineBucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
+    Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref ZGalleryPipelineBucket
       PolicyDocument:
@@ -22,7 +22,7 @@ Resources:
           - Sid: DenyUnEncryptedObjectUploads
             Effect: Deny
             Principal: '*'
-            Action: 's3:PutObject'
+            Action: s3:PutObject
             Resource: !Join
               - ''
               - - !GetAtt
@@ -54,7 +54,7 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - 'sts:AssumeRole'
+              - sts:AssumeRole
             Principal:
               Service:
                 - codebuild.amazonaws.com
@@ -68,13 +68,13 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: "arn:aws:logs:*:*:*"
+                Resource: 'arn:aws:logs:*:*:*'
               - Effect: Allow
                 Action:
                   - s3:GetObject
                   - s3:GetObjectVersion
                   - s3:PutObject
-                Resource: !Sub "arn:aws:s3:::${ZGalleryPipelineBucket}/*"
+                Resource: !Sub 'arn:aws:s3:::${ZGalleryPipelineBucket}/*'
               - Effect: Allow
                 Action:
                   - ecr:BatchCheckLayerAvailability
