@@ -283,4 +283,5 @@ Resources:
                   - ecr:CreateRepository
                   - ecr:DeleteRepository
                   - ecr:PutLifecyclePolicy
+                  - ecr:GetAuthorizationToken
                 Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-ecr
