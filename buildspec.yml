@@ -4,7 +4,6 @@ phases:
   install:
     runtime-versions:
       nodejs: 10
-      docker: 18
     commands:
       - cd $APP_NAME
       - echo Installing dependencies
