@@ -84,6 +84,11 @@ Resources:
                   - ecr:PutImage
                   - ecr:UploadLayerPart
                 Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-ecr'
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource:
+                  - '*'
 
   ZGalleryUnitTestBuildProject:
     Type: AWS::CodeBuild::Project
@@ -97,11 +102,12 @@ Resources:
         Type: LINUX_CONTAINER
         Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
         ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_REGION
-            Value: !Sub 'AWS::Region'
+            Value: !Ref 'AWS::Region'
           - Name: AWS_ACCOUNT_ID
-            Value: !Sub 'AWS::AccountId'
+            Value: !Ref 'AWS::AccountId'
           - Name: IMAGE_REPO_NAME
             Value: 'zgallery-ecr'
           - Name: APP_NAME
@@ -283,5 +289,4 @@ Resources:
                   - ecr:CreateRepository
                   - ecr:DeleteRepository
                   - ecr:PutLifecyclePolicy
-                  - ecr:GetAuthorizationToken
                 Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-ecr
