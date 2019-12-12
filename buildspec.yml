@@ -4,9 +4,21 @@ phases:
   install:
     runtime-versions:
       nodejs: 10
+      docker: 18
     commands:
-      - cd zgallery-backend
+      - cd $APP_NAME
+      - echo Installing dependencies
       - npm i
   build:
     commands:
+      - echo Build started on `date`
+      - echo Running unit tests...
       - npm test
+      - echo Building Docker Image...
+      - docker build -t $APP_NAME:latest .
+      - docker tag $APP_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:latest

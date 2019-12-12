@@ -18,6 +18,27 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
+  ZGalleryERC:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: 'zgallery-ecr'
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 10,
+              "description": "Keep 3 images only",
+              "selection":
+              {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 3
+              },
+            "action": { "type": "expire" }
+            }]
+          }
+
   ZGalleryALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -63,7 +84,7 @@ Resources:
     Properties:
       AutoScalingGroupName: zgallery-asg
       AvailabilityZones: !GetAZs
-        Ref: "AWS::Region"
+        Ref: 'AWS::Region'
       DesiredCapacity: 1
       MinSize: 1
       MaxSize: 2
