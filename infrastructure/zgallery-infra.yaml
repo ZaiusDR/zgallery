@@ -21,7 +21,7 @@ Resources:
   ZGalleryERC:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: 'zgallery-ecr'
+      RepositoryName: 'zgallery-backend'
       LifecyclePolicy:
         LifecyclePolicyText: |
           {
