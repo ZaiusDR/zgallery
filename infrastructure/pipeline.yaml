@@ -174,7 +174,7 @@ Resources:
                 Capabilities: CAPABILITY_IAM
                 TemplatePath: SourceOutput::infrastructure/zgallery-infra.yaml
               RunOrder: 1
-        - Name: UnitTest
+        - Name: Build
           Actions:
             - Name: zgallery-backend-build
               InputArtifacts:
@@ -274,6 +274,7 @@ Resources:
                   - ec2:CreateSecurityGroup
                   - ec2:DeleteSecurityGroup
                   - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:RevokeSecurityGroupIngress
                   - ec2:CreateLaunchTemplate
                   - ec2:DeleteLaunchTemplate
                   - ec2:CreateLaunchTemplateVersion
@@ -292,11 +293,12 @@ Resources:
                   - '*'
               - Effect: Allow
                 Action:
-                  - autoscaling:DescribeAutoScalingGroups
+                  - autoscaling:Describe*
                   - autoscaling:CreateAutoScalingGroup
                   - autoscaling:DeleteAutoScalingGroup
                   - autoscaling:UpdateAutoScalingGroup
-                  - autoscaling:DescribeScalingActivities
+                  - autoscaling:CreateLaunchConfiguration
+                  - autoscaling:DeleteLaunchConfiguration
                 Resource:
                   - '*'
               - Effect: Allow

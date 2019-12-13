@@ -17,19 +17,41 @@ Resources:
       GroupDescription: 'Allow http'
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 3000
+          ToPort: 3000
           CidrIp: 0.0.0.0/0
 
-  ZGalleryLaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
+  ZGalleryLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      LaunchTemplateName: !Sub 'zgallery-launch-template-${RandomId}'
-      LaunchTemplateData:
-        ImageId: !Ref LatestAmiId
-        InstanceType: t2.micro
-        SecurityGroups:
-          - !Ref ZGalleryInstanceSecurityGroup
+      # LaunchConfigurationName: 'zgallery-launch-config'
+      ImageId: !Ref LatestAmiId
+      InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref ZGalleryInstanceSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          echo "This is for rolling update ${RandomId}"
+          yum update -y
+          yum update -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-init -v -s ${AWS::StackId} -r ZGalleryLaunchConfiguration --region ${AWS::Region}
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          commands:
+            ecr-login:
+              command: "$(aws ecr get-login --region region --no-include-email)"
+            start-zgallery-backend:
+              command: !Sub "docker run -d -p 3000:3000 ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/zgallery-backend"
+          packages:
+            yum:
+              docker: []
+          services:
+            sysvinit:
+              docker:
+                enabled: "true"
+                ensureRunning: "true"
 
   ZGalleryASG:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -39,9 +61,29 @@ Resources:
       DesiredCapacity: 1
       MinSize: 1
       MaxSize: 2
-      LaunchTemplate:
-        LaunchTemplateId: !Ref ZGalleryLaunchTemplate
-        Version: 1
+      LaunchConfigurationName: !Ref ZGalleryLaunchConfiguration
     UpdatePolicy:
       AutoScalingReplacingUpdate:
         WillReplace: true
+
+  ZGalleryInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+      Policies:
+        - PolicyName: ZGalleryInstanceRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: '*'
