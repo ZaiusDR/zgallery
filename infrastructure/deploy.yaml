@@ -29,6 +29,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - !Ref ZGalleryInstanceSecurityGroup
+      IamInstanceProfile: !Ref ZGalleryInstanceProfile
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
@@ -65,6 +66,12 @@ Resources:
     UpdatePolicy:
       AutoScalingReplacingUpdate:
         WillReplace: true
+
+  ZGalleryInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref ZGalleryInstanceRole
 
   ZGalleryInstanceRole:
     Type: AWS::IAM::Role

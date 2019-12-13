@@ -313,3 +313,11 @@ Resources:
                   - ecr:DeleteRepository
                   - ecr:PutLifecyclePolicy
                 Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
+              - Effect: Allow
+                Action:
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                Resource:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-pipeline-ZGalleryCreateInfraStepPipelineS-*
