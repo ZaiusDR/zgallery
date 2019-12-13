@@ -317,7 +317,14 @@ Resources:
                 Action:
                   - iam:CreateRole
                   - iam:DeleteRole
+                  - iam:GetRolePolicy
                   - iam:PutRolePolicy
                   - iam:DeleteRolePolicy
+                  - iam:CreateInstanceProfile
+                  - iam:DeleteInstanceProfile
+                  - iam:AddRoleToInstanceProfile
+                  - iam:RemoveRoleFromInstanceProfile
+                  - iam:PassRole
                 Resource:
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-pipeline-ZGalleryCreateInfraStepPipelineS-*
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-deploy-dev-ZGalleryInstanceRole-*
+                  - !Sub arn:aws:iam::${AWS::AccountId}:instance-profile/zgallery-deploy-dev-ZGalleryInstanceProfile-*

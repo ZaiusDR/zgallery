@@ -94,3 +94,10 @@ Resources:
                 Action:
                   - ecr:GetAuthorizationToken
                 Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ecr:DescribeRepositories
+                  - ecr:CreateRepository
+                  - ecr:DeleteRepository
+                  - ecr:PutLifecyclePolicy
+                Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
