@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: 'Deploys ZGallery ASG and Instances'
+
+Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  RandomId:
+    Type: String
+    Default: start
+
+Resources:
+  ZGalleryInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'zgallery-instance-sg'
+      GroupDescription: 'Allow http'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ZGalleryLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub 'zgallery-launch-template-${RandomId}'
+      LaunchTemplateData:
+        ImageId: !Ref LatestAmiId
+        InstanceType: t2.micro
+        SecurityGroups:
+          - !Ref ZGalleryInstanceSecurityGroup
+
+  ZGalleryASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !GetAZs
+        Ref: 'AWS::Region'
+      DesiredCapacity: 1
+      MinSize: 1
+      MaxSize: 2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ZGalleryLaunchTemplate
+        Version: 1
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: true

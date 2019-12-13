@@ -199,13 +199,12 @@ Resources:
                   Version: 1
                 Configuration:
                   ActionMode: REPLACE_ON_FAILURE
-                  StackName: zgallery-infrastructure
+                  StackName: zgallery-deploy-dev
                   RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
                   Capabilities: CAPABILITY_IAM
-                  TemplatePath: SourceOutput::infrastructure/zgallery-infra.yaml
+                  TemplatePath: SourceOutput::infrastructure/deploy.yaml
                   ParameterOverrides: |
                     {
-                      "Deploy": "true",
                       "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]}
                     }
                 RunOrder: 1
