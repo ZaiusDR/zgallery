@@ -42,7 +42,7 @@ Resources:
         config:
           commands:
             ecr-login:
-              command: "$(aws ecr get-login --region region --no-include-email)"
+              command: !Sub "$(aws ecr get-login --region ${AWS::Region} --no-include-email)"
             start-zgallery-backend:
               command: !Sub "docker run -d -p 3000:3000 ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/zgallery-backend"
           packages:
