@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const bucketName = 'z.gallery.photos';
+const bucketName = 'zgallery.pictures';
 
 function parseAlbumNames(data) {
   return data.CommonPrefixes.map((item) => item.Prefix.split('/')[1]);

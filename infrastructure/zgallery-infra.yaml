@@ -2,6 +2,15 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates the Stack for ZGallery Webapp'
 
 Resources:
+  ZGalleryPicturesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: zgallery.pictures
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
   ZGalleryALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:

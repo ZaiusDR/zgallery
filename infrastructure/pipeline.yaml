@@ -268,6 +268,11 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - s3:*
+                Resource:
+                  - arn:aws:s3:::zgallery.pictures
+              - Effect: Allow
+                Action:
                   - ec2:Describe*
                   - ec2:RunInstances
                   - ec2:TerminateInstances
