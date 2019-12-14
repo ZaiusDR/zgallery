@@ -39,20 +39,25 @@ Resources:
           /opt/aws/bin/cfn-init -v -s ${AWS::StackId} -r ZGalleryLaunchConfiguration --region ${AWS::Region}
     Metadata:
       AWS::CloudFormation::Init:
-        config:
+        configSets:
+          ascending:
+            - install-docker
+            - run-zgallery
+        install-docker:
+          packages:
+            yum:
+              docker: []
+            services:
+              sysvinit:
+                docker:
+                  enabled: "true"
+                  ensureRunning: "true"
+        run-zgallery:
           commands:
             ecr-login:
               command: !Sub "$(aws ecr get-login --region ${AWS::Region} --no-include-email)"
             start-zgallery-backend:
               command: !Sub "docker run -d -p 3000:3000 ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/zgallery-backend"
-          packages:
-            yum:
-              docker: []
-          services:
-            sysvinit:
-              docker:
-                enabled: "true"
-                ensureRunning: "true"
 
   ZGalleryASG:
     Type: AWS::AutoScaling::AutoScalingGroup
