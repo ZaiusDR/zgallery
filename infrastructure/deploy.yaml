@@ -36,7 +36,7 @@ Resources:
           echo "This is for rolling update ${RandomId}"
           yum update -y
           yum update -y aws-cfn-bootstrap
-          /opt/aws/bin/cfn-init -v -s ${AWS::StackId} -r ZGalleryLaunchConfiguration --region ${AWS::Region}
+          /opt/aws/bin/cfn-init -v -c ascending -s ${AWS::StackId} -r ZGalleryLaunchConfiguration --region ${AWS::Region}
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
@@ -47,11 +47,11 @@ Resources:
           packages:
             yum:
               docker: []
-            services:
-              sysvinit:
-                docker:
-                  enabled: "true"
-                  ensureRunning: "true"
+          services:
+            sysvinit:
+              docker:
+                enabled: "true"
+                ensureRunning: "true"
         run-zgallery:
           commands:
             ecr-login:
@@ -101,11 +101,7 @@ Resources:
                 Resource: '*'
               - Effect: Allow
                 Action:
-                  - ecr:DescribeRepositories
-                  - ecr:CreateRepository
-                  - ecr:DeleteRepository
-                  - ecr:PutLifecyclePolicy
-                  - ecr:DescribeImages
+                  - ecr:*
                 Resource:
                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*
