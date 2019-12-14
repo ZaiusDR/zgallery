@@ -20,9 +20,8 @@ async function getAlbums() {
     Delimiter: '/',
   };
 
-  let data = await awsS3Client.listObjectsV2(params).promise();
-  const albumNames = parseAlbumNames(data);
-  return albumNames;
+  const data = await awsS3Client.listObjectsV2(params).promise();
+  return parseAlbumNames(data);
 }
 
 
@@ -34,8 +33,7 @@ async function getPictures(albumName) {
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();
-  const pictures = parsePictureNames(data);
-  return pictures;
+  return parsePictureNames(data);
 }
 
 exports.getAlbums = getAlbums;
