@@ -68,7 +68,15 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Name: zgallery-alb-tg
-      Port: 80
+      Port: 3000
       Protocol: HTTP
       TargetType: instance
       VpcId: vpc-f4c2ec92
+
+
+Outputs:
+  ZGalleryTG:
+    Description: ZGallery Target Group
+    Value: !Ref ZGalleryALBTargetGroup
+    Export:
+      Name: zgallery-target-group

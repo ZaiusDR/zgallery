@@ -68,6 +68,8 @@ Resources:
       MinSize: 1
       MaxSize: 2
       LaunchConfigurationName: !Ref ZGalleryLaunchConfiguration
+      TargetGroupARNs:
+        - !ImportValue zgallery-target-group
     UpdatePolicy:
       AutoScalingReplacingUpdate:
         WillReplace: true
@@ -109,6 +111,7 @@ Resources:
                 Action:
                   - s3:ListBucket
                   - s3:ListObjects
+                  - s3:*
                 Resource:
                   - !Sub arn:aws:s3:::zgallery.pictures
                   - !Sub arn:aws:s3:::zgallery.pictures/*

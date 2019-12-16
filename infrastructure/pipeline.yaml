@@ -304,6 +304,7 @@ Resources:
                   - autoscaling:UpdateAutoScalingGroup
                   - autoscaling:CreateLaunchConfiguration
                   - autoscaling:DeleteLaunchConfiguration
+                  - autoscaling:AttachLoadBalancerTargetGroups
                 Resource:
                   - '*'
               - Effect: Allow
