@@ -37,6 +37,7 @@ Resources:
           yum update -y
           yum update -y aws-cfn-bootstrap
           /opt/aws/bin/cfn-init -v -c ascending -s ${AWS::StackId} -r ZGalleryLaunchConfiguration --region ${AWS::Region}
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ZGalleryASG --region ${AWS::Region}
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
@@ -70,9 +71,13 @@ Resources:
       LaunchConfigurationName: !Ref ZGalleryLaunchConfiguration
       TargetGroupARNs:
         - !ImportValue zgallery-target-group
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT10M
     UpdatePolicy:
-      AutoScalingReplacingUpdate:
-        WillReplace: true
+      AutoScalingRollingUpdate:
+        PauseTime: PT10M
 
   ZGalleryInstanceProfile:
     Type: AWS::IAM::InstanceProfile
