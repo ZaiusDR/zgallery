@@ -8,7 +8,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "aws-sdk": "^2.586.0",
+    "aws-sdk": "^2.591.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
