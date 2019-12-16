@@ -21,6 +21,7 @@ async function getAlbums() {
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();
+  console.log(data);
   return parseAlbumNames(data);
 }
 
