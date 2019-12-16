@@ -334,3 +334,16 @@ Resources:
                 Resource:
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-deploy-dev-ZGalleryInstanceRole-*
                   - !Sub arn:aws:iam::${AWS::AccountId}:instance-profile/zgallery-deploy-dev-ZGalleryInstanceProfile-*
+              - Effect: Allow
+                Action:
+                  - route53:ListHostedZones
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - route53:ListResourceRecordSets
+                  - route53:ChangeResourceRecordSets
+                  - route53:GetChange
+                Resource:
+                  - arn:aws:route53:::hostedzone/*
+                  - arn:aws:route53:::change/*

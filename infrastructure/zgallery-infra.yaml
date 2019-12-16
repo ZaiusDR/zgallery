@@ -2,6 +2,17 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates the Stack for ZGallery Webapp'
 
 Resources:
+  ZGalleryBackendDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: backend.zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery Backend Service
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryALB.DNSName
+
   ZGalleryPicturesBucket:
     Type: AWS::S3::Bucket
     Properties:

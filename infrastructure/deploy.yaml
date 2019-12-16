@@ -111,7 +111,6 @@ Resources:
                 Action:
                   - s3:ListBucket
                   - s3:ListObjects
-                  - s3:*
                 Resource:
                   - !Sub arn:aws:s3:::zgallery.pictures
                   - !Sub arn:aws:s3:::zgallery.pictures/*
