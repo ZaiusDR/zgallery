@@ -84,6 +84,7 @@ Resources:
       TargetType: instance
       VpcId: vpc-f4c2ec92
       HealthCheckPath: /health-check
+      HealthyThresholdCount: 2
 
 
 Outputs:

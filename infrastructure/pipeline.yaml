@@ -289,6 +289,7 @@ Resources:
                 Action:
                   - elasticloadbalancing:Describe*
                   - elasticloadbalancing:CreateTargetGroup
+                  - elasticloadbalancing:ModifyTargetGroup
                   - elasticloadbalancing:DeleteTargetGroup
                   - elasticloadbalancing:CreateLoadBalancer
                   - elasticloadbalancing:DeleteLoadBalancer
