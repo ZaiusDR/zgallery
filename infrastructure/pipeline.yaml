@@ -306,6 +306,8 @@ Resources:
                   - autoscaling:CreateLaunchConfiguration
                   - autoscaling:DeleteLaunchConfiguration
                   - autoscaling:AttachLoadBalancerTargetGroups
+                  - autoscaling:TerminateInstanceInAutoScalingGroup
+                  - autoscaling:SetDesiredCapacity
                 Resource:
                   - '*'
               - Effect: Allow
