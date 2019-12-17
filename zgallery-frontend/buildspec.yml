@@ -16,7 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Running unit tests...
-      - npm test
+      - CI=true npm test
       - echo Building Docker Image...
       - docker build -t $APP_NAME:latest .
       - docker tag $APP_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:latest
