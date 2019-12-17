@@ -116,6 +116,32 @@ Resources:
         Type: CODEPIPELINE
       ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
 
+  ZGalleryE2ETestsBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: e2e-zgallery-backend
+      Artifacts:
+        Type: CODEPIPELINE
+      Description: Run E2E Tests for ZGallery backend
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        EnvironmentVariables:
+          - Name: AWS_REGION
+            Value: !Ref 'AWS::Region'
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref 'AWS::AccountId'
+          - Name: IMAGE_REPO_NAME
+            Value: 'zgallery-ecr'
+          - Name: APP_NAME
+            Value: 'zgallery-backend'
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec_e2e.yml
+      ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
+
   AppPipelineWebhook:
     Type: AWS::CodePipeline::Webhook
     Properties:
@@ -189,25 +215,38 @@ Resources:
               RunOrder: 1
         - Name: DeployDev
           Actions:
-              - Name: deploy-dev
-                InputArtifacts:
-                  - Name: SourceOutput
-                ActionTypeId:
-                  Category: Deploy
-                  Owner: AWS
-                  Provider: CloudFormation
-                  Version: 1
-                Configuration:
-                  ActionMode: REPLACE_ON_FAILURE
-                  StackName: zgallery-deploy-dev
-                  RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
-                  Capabilities: CAPABILITY_IAM
-                  TemplatePath: SourceOutput::infrastructure/deploy.yaml
-                  ParameterOverrides: |
-                    {
-                      "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]}
-                    }
-                RunOrder: 1
+            - Name: deploy-dev
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                StackName: zgallery-deploy-dev
+                RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
+                Capabilities: CAPABILITY_IAM
+                TemplatePath: SourceOutput::infrastructure/deploy.yaml
+                ParameterOverrides: |
+                  {
+                    "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]}
+                  }
+              RunOrder: 1
+        - Name: E2ETests
+          Actions:
+            - Name: zgallery-e2e-tests
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: e2e-zgallery-backend
+              RunOrder: 1
 
   ZGalleryPipelineServiceRole:
     Type: AWS::IAM::Role

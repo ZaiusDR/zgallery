@@ -12,6 +12,7 @@ function parsePictureNames(data) {
     .map((item) => item.Key.split('/').slice(-1).pop());
 }
 
+
 async function getAlbums() {
   const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });
   const params = {
@@ -21,10 +22,8 @@ async function getAlbums() {
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();
-  console.log(data);
   return parseAlbumNames(data);
 }
-
 
 async function getPictures(albumName) {
   const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });

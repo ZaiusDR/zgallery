@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+    commands:
+      - cd $APP_NAME
+      - echo Installing dependencies
+      - npm i
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Running e2e tests...
+      - npm test e2e
+  post_build:
+    commands:
+      - echo Build completed on `date`
