@@ -42,8 +42,21 @@ Resources:
       AWS::CloudFormation::Init:
         configSets:
           ascending:
+            - configure-instance
             - install-docker
             - run-zgallery
+        configure-instance:
+          packages:
+            yum:
+              python3-pip: []
+          commands:
+            install-awscli:
+              command: pip3 install awscli
+            set-put-hop-limit:
+              # This is for authentication requests using Metadata v2 can reach docker containers
+              command: !Sub |
+                aws ec2 modify-instance-metadata-options --instance-id $(curl http://169.254.169.254/latest/meta-data/instance-id) \
+                --http-endpoint enabled --http-put-response-hop-limit 2 --region ${AWS::Region}
         install-docker:
           packages:
             yum:
@@ -77,7 +90,8 @@ Resources:
         Timeout: PT10M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        PauseTime: PT10M
+        MinInstancesInService: 1
+        WaitOnResourceSignals: true
 
   ZGalleryInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -104,6 +118,11 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - ec2:ModifyInstanceMetadataOptions
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
                   - ecr:GetAuthorizationToken
                 Resource: '*'
               - Effect: Allow
@@ -115,7 +134,6 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:ListBucket
-                  - s3:ListObjects
                 Resource:
                   - !Sub arn:aws:s3:::zgallery.pictures
                   - !Sub arn:aws:s3:::zgallery.pictures/*
