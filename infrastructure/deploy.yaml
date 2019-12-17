@@ -24,7 +24,6 @@ Resources:
   ZGalleryLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      # LaunchConfigurationName: 'zgallery-launch-config'
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
       SecurityGroups:
@@ -84,6 +83,10 @@ Resources:
       LaunchConfigurationName: !Ref ZGalleryLaunchConfiguration
       TargetGroupARNs:
         - !ImportValue zgallery-target-group
+      Tags:
+        - Key: app
+          PropagateAtLaunch: true
+          Value: zgallery
     CreationPolicy:
       ResourceSignal:
         Count: 1
@@ -137,3 +140,46 @@ Resources:
                 Resource:
                   - !Sub arn:aws:s3:::zgallery.pictures
                   - !Sub arn:aws:s3:::zgallery.pictures/*
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - ssm:DescribeAssociation
+                  - ssm:GetDeployablePatchSnapshotForInstance
+                  - ssm:GetDocument
+                  - ssm:DescribeDocument
+                  - ssm:GetManifest
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:ListAssociations
+                  - ssm:ListInstanceAssociations
+                  - ssm:PutInventory
+                  - ssm:PutComplianceItems
+                  - ssm:PutConfigurePackageResult
+                  - ssm:UpdateAssociationStatus
+                  - ssm:UpdateInstanceAssociationStatus
+                  - ssm:UpdateInstanceInformation
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - ssmmessages:CreateControlChannel
+                  - ssmmessages:CreateDataChannel
+                  - ssmmessages:OpenControlChannel
+                  - ssmmessages:OpenDataChannel
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - ec2messages:AcknowledgeMessage
+                  - ec2messages:DeleteMessage
+                  - ec2messages:FailMessage
+                  - ec2messages:GetEndpoint
+                  - ec2messages:GetMessages
+                  - ec2messages:SendReply
+                Resource:
+                  - '*'

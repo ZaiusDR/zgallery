@@ -349,6 +349,7 @@ Resources:
                   - autoscaling:AttachLoadBalancerTargetGroups
                   - autoscaling:TerminateInstanceInAutoScalingGroup
                   - autoscaling:SetDesiredCapacity
+                  - autoscaling:CreateOrUpdateTags
                 Resource:
                   - '*'
               - Effect: Allow
