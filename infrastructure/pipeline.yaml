@@ -286,7 +286,9 @@ Resources:
                 Action:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
-                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-backend'
+                Resource:
+                  - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-backend'
+                  - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/e2e-zgallery-backend'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
     Type: AWS::IAM::Role
