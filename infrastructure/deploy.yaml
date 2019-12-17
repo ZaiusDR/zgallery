@@ -54,8 +54,11 @@ Resources:
             set-put-hop-limit:
               # This is for authentication requests using Metadata v2 can reach docker containers
               command: !Sub |
-                aws ec2 modify-instance-metadata-options --instance-id $(curl http://169.254.169.254/latest/meta-data/instance-id) \
-                --http-endpoint enabled --http-put-response-hop-limit 2 --region ${AWS::Region}
+                aws ec2 modify-instance-metadata-options \
+                  --instance-id $(curl http://169.254.169.254/latest/meta-data/instance-id) \
+                  --http-endpoint enabled \
+                  --http-put-response-hop-limit 2 \
+                  --region ${AWS::Region}
         install-docker:
           packages:
             yum:
@@ -70,7 +73,13 @@ Resources:
             ecr-login:
               command: !Sub "$(aws ecr get-login --region ${AWS::Region} --no-include-email)"
             start-zgallery-backend:
-              command: !Sub "docker run -d -p 3000:3000 ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/zgallery-backend"
+              command: !Sub |
+                docker run -d -p 3000:3000 \
+                    --log-driver=awslogs \
+                    --log-opt awslogs-region=${AWS::Region} \
+                    --log-opt awslogs-group=zgallery-backend \
+                    --log-opt awslogs-create-group=true \
+                    ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/zgallery-backend
 
   ZGalleryASG:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -122,6 +131,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - ec2:ModifyInstanceMetadataOptions
+                  - ec2:DescribeTags
                 Resource:
                   - '*'
               - Effect: Allow
@@ -144,6 +154,12 @@ Resources:
                 Action:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
                 Resource:
                   - '*'
               - Effect: Allow
