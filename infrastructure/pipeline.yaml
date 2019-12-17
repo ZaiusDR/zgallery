@@ -83,7 +83,9 @@ Resources:
                   - ecr:InitiateLayerUpload
                   - ecr:PutImage
                   - ecr:UploadLayerPart
-                Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend'
+                Resource:
+                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
+                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-frontend
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
@@ -114,6 +116,34 @@ Resources:
             Value: 'zgallery-backend'
       Source:
         Type: CODEPIPELINE
+        BuildSpec: zgallery-backend/buildspec.yml
+      ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
+
+  ZGalleryFrontendUnitTestBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: build-zgallery-frontend
+      Artifacts:
+        Type: CODEPIPELINE
+      Description: Run UnitTests for ZGallery frontend
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: AWS_REGION
+            Value: !Ref 'AWS::Region'
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref 'AWS::AccountId'
+          - Name: IMAGE_REPO_NAME
+            Value: 'zgallery-ecr'
+          - Name: APP_NAME
+            Value: 'zgallery-frontend'
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: zgallery-frontend/buildspec.yml
       ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
 
   ZGalleryE2ETestsBuildProject:
@@ -139,7 +169,7 @@ Resources:
             Value: 'zgallery-backend'
       Source:
         Type: CODEPIPELINE
-        BuildSpec: buildspec_e2e.yml
+        BuildSpec: zgallery-backend/buildspec_e2e.yml
       ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
 
   AppPipelineWebhook:
@@ -212,6 +242,17 @@ Resources:
                 Version: 1
               Configuration:
                 ProjectName: build-zgallery-backend
+              RunOrder: 1
+            - Name: zgallery-frontend-build
+              InputArtifacts:
+                  - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: build-zgallery-frontend
               RunOrder: 1
         - Name: DeployDev
           Actions:
@@ -288,6 +329,7 @@ Resources:
                   - codebuild:BatchGetBuilds
                 Resource:
                   - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-backend'
+                  - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-frontend'
                   - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/e2e-zgallery-backend'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
@@ -363,7 +405,9 @@ Resources:
                   - ecr:CreateRepository
                   - ecr:DeleteRepository
                   - ecr:PutLifecyclePolicy
-                Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
+                Resource:
+                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-backend
+                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/zgallery-frontend
               - Effect: Allow
                 Action:
                   - iam:CreateRole

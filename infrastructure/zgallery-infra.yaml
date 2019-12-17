@@ -54,6 +54,27 @@ Resources:
             }]
           }
 
+  ZGalleryFrontendERC:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: 'zgallery-frontend'
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 10,
+              "description": "Keep 3 images only",
+              "selection":
+              {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 3
+              },
+            "action": { "type": "expire" }
+            }]
+          }
+
   ZGalleryALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
