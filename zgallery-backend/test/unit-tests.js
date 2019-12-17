@@ -32,4 +32,15 @@ describe('Tests AWS Service', () => {
 
     AWS.restore('S3');
   });
+
+  it('should Return 404 on album not found', async () => {
+    AWS.mock('S3', 'listObjectsV2', (params, callback) => {
+      callback(null, testConstants.albumNotFoundReturnData);
+    });
+    const response = await awsService.getPictures('nonExistingAlbum');
+
+    expect(response).to.eql({ Error: 404 });
+
+    AWS.restore('S3');
+  });
 });

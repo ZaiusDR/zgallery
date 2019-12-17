@@ -47,5 +47,16 @@ const listPicturesReturnData = {
   KeyCount: 3,
 };
 
+const albumNotFoundReturnData = {
+  IsTruncated: false,
+  Contents: [],
+  Name: 'zgallery.pictures',
+  Prefix: 'test/nonExistingAlbum',
+  MaxKeys: 1000,
+  CommonPrefixes: [],
+  KeyCount: 0,
+};
+
 exports.listAlbumsReturnData = listAlbumsReturnData;
 exports.listPicturesReturnData = listPicturesReturnData;
+exports.albumNotFoundReturnData = albumNotFoundReturnData;

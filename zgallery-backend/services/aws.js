@@ -33,6 +33,9 @@ async function getPictures(albumName) {
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();
+  if (data.Contents.length === 0) {
+    return { Error: 404 };
+  }
   return parsePictureNames(data);
 }
 
