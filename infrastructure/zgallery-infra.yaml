@@ -2,6 +2,17 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates the Stack for ZGallery Webapp'
 
 Resources:
+  ZGalleryDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryALB.DNSName
+
   ZGalleryBackendDNS:
     Type: AWS::Route53::RecordSet
     Properties:
@@ -9,6 +20,39 @@ Resources:
       Name: backend.zgallery.esuarez.info
       HostedZoneName: esuarez.info.
       Comment: DNS name for ZGallery Backend Service
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryALB.DNSName
+
+  ZGalleryDevBackendDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: backend.dev.zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery Dev Backend Service
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryALB.DNSName
+
+  ZGalleryFrontendDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: frontend.zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery Frontend Service
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryALB.DNSName
+
+  ZGalleryDevFrontendDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: frontend.dev.zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery Dev Frontend Service
       TTL: 300
       ResourceRecords:
         - !GetAtt ZGalleryALB.DNSName
@@ -96,10 +140,48 @@ Resources:
       Port: 80
       Protocol: HTTP
 
+  ZGalleryRedirectFrontendListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ZGalleryALBTargetGroup
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - !Ref ZGalleryDNS
+              - !Ref ZGalleryFrontendDNS
+      ListenerArn: !Ref ZGalleryALBListener
+      Priority: 20
+
+  ZGalleryRedirectBackendListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ZGalleryBackendALBTargetGroup
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - !Ref ZGalleryBackendDNS
+      ListenerArn: !Ref ZGalleryALBListener
+      Priority: 30
+
   ZGalleryALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: zgallery-alb-tg
+      Port: 5000
+      Protocol: HTTP
+      TargetType: instance
+      VpcId: vpc-f4c2ec92
+      HealthCheckPath: /
+      HealthyThresholdCount: 2
+
+  ZGalleryBackendALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
       Port: 3000
       Protocol: HTTP
       TargetType: instance
@@ -114,3 +196,8 @@ Outputs:
     Value: !Ref ZGalleryALBTargetGroup
     Export:
       Name: zgallery-target-group
+  ZGalleryBackendTG:
+    Description: ZGallery Backend Target Group
+    Value: !Ref ZGalleryBackendALBTargetGroup
+    Export:
+      Name: zgallery-backend-target-group
