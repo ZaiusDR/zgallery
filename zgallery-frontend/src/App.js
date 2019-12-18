@@ -10,7 +10,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch('http://zgallery-backend:3000/api/v1/albums')
+    fetch('http://backend.zgallery.esuarez.info/api/v1/albums')
       .then(results => {
         return results.json()
       }).then(data => {
