@@ -47,6 +47,7 @@ Resources:
           ascending:
             - configure-instance
             - install-docker
+            - create-docker-network
             - run-zgallery-frontend
             - run-zgallery-backend
         configure-instance:
@@ -73,6 +74,10 @@ Resources:
               docker:
                 enabled: "true"
                 ensureRunning: "true"
+        create-docker-network:
+          commands:
+            create-docker-network:
+              command: docker network create zgallery-network
         run-zgallery-frontend:
           commands:
             ecr-login:
@@ -80,6 +85,8 @@ Resources:
             start-zgallery-frontend:
               command: !Sub |
                 docker run -d -p 5000:5000 \
+                    --name zgallery-frontend \
+                    --network zgallery-network \
                     --log-driver=awslogs \
                     --log-opt awslogs-region=${AWS::Region} \
                     --log-opt awslogs-group=zgallery-frontend \
@@ -92,6 +99,8 @@ Resources:
             start-zgallery-backend:
               command: !Sub |
                 docker run -d -p 3000:3000 \
+                    --name zgallery-backend \
+                    --network zgallery-network \
                     --log-driver=awslogs \
                     --log-opt awslogs-region=${AWS::Region} \
                     --log-opt awslogs-group=zgallery-backend \
