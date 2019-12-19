@@ -1,0 +1,15 @@
+FROM node:lts
+
+ENV app_path /opt/zgallery-frontend
+
+RUN mkdir -p ${app_path}
+
+VOLUME ${app_path}
+
+EXPOSE 3000
+
+COPY entrypoint.sh .
+
+RUN chmod u+x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

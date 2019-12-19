@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.front
+    depends_on:
+      - backend
+    container_name: zgallery-frontend
+    ports:
+    - 3000:3000
+    volumes:
+    - ../zgallery-frontend:/opt/zgallery-frontend
+  backend:
+    build:
+      context: ../zgallery-backend
+    container_name: zgallery-backend
+    ports:
+      - 5000:3000
+    volumes:
+      - ../zgallery-backend:/opt/zgallery-backend
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
