@@ -57,6 +57,17 @@ Resources:
       ResourceRecords:
         - !GetAtt ZGalleryALB.DNSName
 
+  ZGalleryDevMediaDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: CNAME
+      Name: media.dev.zgallery.esuarez.info
+      HostedZoneName: esuarez.info.
+      Comment: DNS name for ZGallery Dev Frontend Service
+      TTL: 300
+      ResourceRecords:
+        - !GetAtt ZGalleryPicturesBucket.DomainName
+
   ZGalleryPicturesBucket:
     Type: AWS::S3::Bucket
     Properties:

@@ -10,8 +10,6 @@ EXPOSE 5000
 
 WORKDIR ${app_path}
 
-#RUN npm i
-
 RUN npm run build
 
 RUN npm install -g serve

@@ -8,6 +8,10 @@ Parameters:
   RandomId:
     Type: String
     Default: start
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, live]
 
 Resources:
   ZGalleryInstanceSecurityGroup:
