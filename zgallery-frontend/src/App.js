@@ -5,23 +5,16 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      albums: [],
+      albums: null,
     }
   };
 
   componentDidMount() {
-    fetch('http://backend.zgallery.esuarez.info/api/v1/albums')
+    fetch('/api/v1/albums')
       .then(results => {
-        return results.json()
+        return results.json();
       }).then(data => {
-        let albums = data.results.map(album => {
-          return(
-            <div key={album}>
-              <p>album</p>
-            </div>
-          )
-        });
-        this.setState({ albums: albums})
+      this.setState({ albums: data})
     }).catch(error => {
       console.log(error);
     });
@@ -32,9 +25,18 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <div className="Albums-container">
-            {this.state.albums}
+            {this.state.albums !== null ?
+              this.state.albums.map(album => {
+                return(
+                  <div key={album}>
+                    <p className={album}>{album}</p>
+                  </div>
+                )
+              })
+              :
+              <span className="spinner" />
+            }
           </div>
-          <p>holi</p>
         </header>
       </div>
     );
