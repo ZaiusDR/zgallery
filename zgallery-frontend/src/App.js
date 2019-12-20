@@ -14,10 +14,10 @@ class App extends Component {
       .then(results => {
         return results.json();
       }).then(data => {
-      this.setState({ albums: data})
-    }).catch(error => {
-      console.log(error);
-    });
+        this.setState({ albums: data})
+      }).catch(error => {
+        console.log(error);
+      });
   }
 
   render() {
