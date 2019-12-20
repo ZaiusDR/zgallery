@@ -2,6 +2,4 @@
 
 cd "$app_path"
 
-npm i
-
 npm start
