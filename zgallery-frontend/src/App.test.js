@@ -7,14 +7,18 @@ import fetchMock from 'fetch-mock';
 
 import App from './App';
 
+import {configuration} from './settings';
+
 configure({ adapter: new Adapter() });
+
+const backendUrl = `http://${configuration.serverUrl}/api/v1/albums`;
 
 describe('<App /> Tests', () => {
 
   afterEach(() => fetchMock.reset());
 
   test('should show a spinner while waiting', () => {
-    fetchMock.mock('/api/v1/albums', ['album0', 'album2'] );
+    fetchMock.mock(backendUrl, ['album0', 'album2'] );
 
     const wrapper = shallow(<App />);
 
@@ -22,7 +26,7 @@ describe('<App /> Tests', () => {
   });
 
   test('renders albums as text', async (done) => {
-    fetchMock.mock('/api/v1/albums', ['album0', 'album2'] );
+    fetchMock.mock(backendUrl, ['album0', 'album2'] );
 
     const wrapper = shallow(<App />);
 

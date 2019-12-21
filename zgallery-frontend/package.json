@@ -31,7 +31,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://zgallery-backend:3000/",
   "devDependencies": {
     "async-wait-until": "^1.2.4",
     "enzyme": "^3.10.0",

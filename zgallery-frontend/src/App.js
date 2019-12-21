@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
+import {configuration} from './settings';
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch('/api/v1/albums')
+    fetch(`http://${configuration.serverUrl}/api/v1/albums`)
       .then(results => {
         return results.json();
       }).then(data => {
