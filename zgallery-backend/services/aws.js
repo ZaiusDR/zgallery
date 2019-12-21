@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const configuration = require('../settings');
 
 const bucketName = 'zgallery.pictures';
 
@@ -17,7 +18,7 @@ async function getAlbums() {
   const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });
   const params = {
     Bucket: bucketName,
-    Prefix: 'test/',
+    Prefix: configuration.bucketFolder,
     Delimiter: '/',
   };
 
