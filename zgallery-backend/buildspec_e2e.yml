@@ -12,7 +12,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Running e2e tests...
-      - npm test e2e
+      - npm run e2e
   post_build:
     commands:
       - echo Build completed on `date`

@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+
 const configuration = require('../settings');
 
 const bucketName = 'zgallery.pictures';
@@ -9,10 +10,37 @@ function parseAlbumNames(data) {
 
 function parsePictureNames(data) {
   return data.Contents
+    .filter((item) => (!item.Key.endsWith('/') && !item.Key.includes('/thumbs')))
+    .map((item) => item.Key.split('/').slice(-1).pop());
+}
+
+function parseThumbsNames(data) {
+  return data.Contents
     .filter((item) => !item.Key.endsWith('/'))
     .map((item) => item.Key.split('/').slice(-1).pop());
 }
 
+async function getThumbs(albumName) {
+  const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });
+  const params = {
+    Bucket: bucketName,
+    Prefix: `${configuration.bucketFolder}${albumName}/thumbs/`,
+  };
+
+  const data = await awsS3Client.listObjectsV2(params).promise();
+  return parseThumbsNames(data);
+}
+
+function gatherAlbumsInfo(albumNames) {
+  return Promise.all(albumNames.map(async (albumName) => {
+    const thumbs = await getThumbs(albumName);
+
+    return {
+      albumName,
+      thumbs,
+    };
+  }));
+}
 
 async function getAlbums() {
   const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });
@@ -23,14 +51,16 @@ async function getAlbums() {
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();
-  return parseAlbumNames(data);
+  const albumNames = await parseAlbumNames(data);
+
+  return gatherAlbumsInfo(albumNames);
 }
 
 async function getPictures(albumName) {
   const awsS3Client = new AWS.S3({ apiVersion: '2006-03-01' });
   const params = {
     Bucket: bucketName,
-    Prefix: `test/${albumName}`,
+    Prefix: `${configuration.bucketFolder}${albumName}`,
   };
 
   const data = await awsS3Client.listObjectsV2(params).promise();

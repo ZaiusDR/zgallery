@@ -3,18 +3,30 @@ const chaiHttp = require('chai-http');
 
 const { expect } = chai;
 
-const zgalleryURL = 'http://backend.zgallery.esuarez.info';
+const configuration = require('../settings');
+
+const zgalleryURL = configuration.serverUrl;
 
 chai.use(chaiHttp);
 
 describe('API E2E Tests', () => {
   it('Should return a list of Albums', (done) => {
+    const expectedAlbums = [
+      {
+        albumName: 'album0',
+        thumbs: ['thumb01.jpg', 'thumb02.jpg'],
+      },
+      {
+        albumName: 'album1',
+        thumbs: ['thumb03.jpg', 'thumb04.jpg'],
+      },
+    ];
     chai
       .request(zgalleryURL)
       .get('/api/v1/albums')
       .end((end, res) => {
         expect(res).to.have.status(200);
-        expect(res.body).to.eqls(['album0', 'album1']);
+        expect(res.body).to.eqls(expectedAlbums);
         done();
       });
   });

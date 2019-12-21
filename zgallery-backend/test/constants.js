@@ -57,6 +57,37 @@ const albumNotFoundReturnData = {
   KeyCount: 0,
 };
 
+const listThumbnailsReturnData = {
+  IsTruncated: false,
+  Contents:
+    [{
+      Key: 'test/album0/thumbs/',
+      LastModified: '2019-12-21T09:54:17.000Z',
+      ETag: '"d41d8cd98f00b204e9800998ecf8427e"',
+      Size: 0,
+      StorageClass: 'STANDARD',
+    },
+    { Key: 'test/album0/thumbs/thumb01.jpg',
+      LastModified: '2019-12-21T09:55:11.000Z',
+      ETag: '"ee28bffd9b51109b0e357f0602628d28"',
+      Size: 52252,
+      StorageClass: 'STANDARD',
+    },
+    {
+      Key: 'test/album0/thumbs/thumb02.jpg',
+      LastModified: '2019-12-21T09:55:22.000Z',
+      ETag: '"9f861364e21a577486128e93565a5462"',
+      Size: 110333,
+      StorageClass: 'STANDARD',
+    }],
+  Name: 'zgallery.pictures',
+  Prefix: 'test/album0/thumbs',
+  MaxKeys: 1000,
+  CommonPrefixes: [],
+  KeyCount: 3
+};
+
 exports.listAlbumsReturnData = listAlbumsReturnData;
 exports.listPicturesReturnData = listPicturesReturnData;
 exports.albumNotFoundReturnData = albumNotFoundReturnData;
+exports.listThumbnailsReturnData = listThumbnailsReturnData;

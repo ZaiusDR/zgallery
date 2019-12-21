@@ -6,12 +6,24 @@ const awsService = require('../services/aws');
 
 
 describe('Tests AWS Service', () => {
-
-  it('should Return a list of albums', async () => {
+  it('should Return a list of albums with first 5 thumbnails', async () => {
     AWS.mock('S3', 'listObjectsV2', (params, callback) => {
-      callback(null, testConstants.listAlbumsReturnData);
+      if (params.Prefix.includes('thumbs')) {
+        callback(null, testConstants.listThumbnailsReturnData);
+      } else {
+        callback(null, testConstants.listAlbumsReturnData);
+      }
     });
-    const expectedAlbums = ['album0', 'album1'];
+    const expectedAlbums = [
+      {
+        albumName: 'album0',
+        thumbs: ['thumb01.jpg', 'thumb02.jpg'],
+      },
+      {
+        albumName: 'album1',
+        thumbs: ['thumb01.jpg', 'thumb02.jpg'],
+      },
+    ];
 
     const albums = await awsService.getAlbums();
 
