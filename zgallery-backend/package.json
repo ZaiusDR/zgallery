@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
     "nodemon": "NODE_ENV=development nodemon --inspect=0.0.0.0:9229 bin/www",
-    "test": "mocha"
+    "test": "NODE_ENV=development mocha"
   },
   "dependencies": {
     "aws-sdk": "^2.591.0",
