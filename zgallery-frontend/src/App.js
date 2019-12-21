@@ -15,7 +15,7 @@ class App extends Component {
       .then(results => {
         return results.json();
       }).then(data => {
-        this.setState({ albums: data})
+        this.setState({ albums: data })
       }).catch(error => {
         console.log(error);
       });
@@ -29,8 +29,11 @@ class App extends Component {
             {this.state.albums !== null ?
               this.state.albums.map(album => {
                 return(
-                  <div key={album}>
-                    <p className={album}>{album}</p>
+                  <div key={album.albumName}>
+                    <p className={album.albumName}>{album.albumName}</p>
+                    <div className={album.albumName}>
+                      {album.thumbs.map(thumb => <p key={thumb}>{thumb}</p>)}
+                    </div>
                   </div>
                 )
               })
