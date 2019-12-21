@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "nodemon": "nodemon --inspect=0.0.0.0:9229 bin/www",
+    "start": "NODE_ENV=production node ./bin/www",
+    "nodemon": "NODE_ENV=development nodemon --inspect=0.0.0.0:9229 bin/www",
     "test": "mocha"
   },
   "dependencies": {
     "aws-sdk": "^2.591.0",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
