@@ -14,7 +14,8 @@ services:
     - ../zgallery-frontend:/opt/zgallery-frontend
   backend:
     build:
-      context: ../zgallery-backend
+      context: .
+      dockerfile: Dockerfile.back
     container_name: zgallery-backend
     ports:
       - 5000:3000

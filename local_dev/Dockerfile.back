@@ -8,8 +8,8 @@ VOLUME ${app_path}
 
 EXPOSE 3000
 
-COPY entrypoint.sh .
+COPY entrypoint-back.sh .
 
-RUN chmod u+x entrypoint.sh
+RUN chmod u+x entrypoint-back.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint-back.sh"]
