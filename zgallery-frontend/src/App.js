@@ -32,7 +32,7 @@ class App extends Component {
                   <div key={album.albumName}>
                     <p className={album.albumName}>{album.albumName}</p>
                     <div className={album.albumName}>
-                      {album.thumbs.map(thumb => <p key={thumb}>{thumb}</p>)}
+                      {album.thumbs.map(thumb => <p key={thumb} className={thumb.split('.')[0]}>{thumb}</p>)}
                     </div>
                   </div>
                 )
