@@ -1,0 +1,17 @@
+.Gallery {
+  text-align: center;
+}
+
+.Gallery-header {
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.5% 1.5%;
+  font-size: calc(20px + 2vmin);
+  color: dimgrey;
+}
+
+.Gallery-link {
+  color: #61dafb;
+}
