@@ -10,23 +10,14 @@ const zgalleryURL = configuration.serverUrl;
 chai.use(chaiHttp);
 
 describe('API E2E Tests', () => {
-  it('Should return a list of Albums', (done) => {
-    const expectedAlbums = [
-      {
-        albumName: 'album0',
-        thumbs: ['thumb01.jpg', 'thumb02.jpg'],
-      },
-      {
-        albumName: 'album1',
-        thumbs: ['thumb03.jpg', 'thumb04.jpg'],
-      },
-    ];
+  it('Should return a list of Albums with thumbnails', (done) => {
     chai
       .request(zgalleryURL)
       .get('/api/v1/albums')
       .end((end, res) => {
         expect(res).to.have.status(200);
-        expect(res.body).to.eqls(expectedAlbums);
+        expect(res.body.length).to.be.greaterThan(0);
+        expect(res.body[0].thumbs.length).to.be.greaterThan(0);
         done();
       });
   });
@@ -34,10 +25,10 @@ describe('API E2E Tests', () => {
   it('Should return the list of Pictures in an Album', (done) => {
     chai
       .request(zgalleryURL)
-      .get('/api/v1/albums/album0')
+      .get('/api/v1/albums/China')
       .end((end, res) => {
         expect(res).to.have.status(200);
-        expect(res.body).to.eqls(['photo0.jpg', 'photo1.jpg']);
+        expect(res.body.length).to.be.greaterThan(0);
         done();
       });
   });
