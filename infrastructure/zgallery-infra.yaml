@@ -57,16 +57,50 @@ Resources:
       ResourceRecords:
         - !GetAtt ZGalleryALB.DNSName
 
-  ZGalleryDevMediaDNS:
+  ZGalleryMediaDNS:
     Type: AWS::Route53::RecordSet
     Properties:
       Type: CNAME
-      Name: media.dev.zgallery.esuarez.info
+      Name: media.esuarez.info
       HostedZoneName: esuarez.info.
       Comment: DNS name for ZGallery Dev Frontend Service
       TTL: 300
       ResourceRecords:
-        - !GetAtt ZGalleryPicturesBucket.DomainName
+        - !GetAtt ZGalleryCloudFrontDistribution.DomainName
+
+  ZGalleryCloudFrontOriginAccessId:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: zgallery-origin-access-id
+
+  ZGalleryCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - media.esuarez.info
+        Enabled: true
+        Origins:
+        - DomainName: !GetAtt ZGalleryPicturesBucket.DomainName
+          Id: zgallery-bucket-origin
+          S3OriginConfig:
+            OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${ZGalleryCloudFrontOriginAccessId}
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          TargetOriginId: zgallery-bucket-origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: '{{resolve:ssm:/acm/certificate/arn:2}}'
+          SslSupportMethod: sni-only
 
   ZGalleryPicturesBucket:
     Type: AWS::S3::Bucket
@@ -76,6 +110,20 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+
+  ZGalleryPicturesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ZGalleryPicturesBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub arn:aws:s3:::${ZGalleryPicturesBucket}/*
+            Principal:
+              CanonicalUser: !GetAtt ZGalleryCloudFrontOriginAccessId.S3CanonicalUserId
 
   ZGalleryALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup

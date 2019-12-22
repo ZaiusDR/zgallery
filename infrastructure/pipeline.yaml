@@ -288,28 +288,28 @@ Resources:
               Configuration:
                 ProjectName: e2e-zgallery-backend
               RunOrder: 1
-        - Name: DeployLive
-          Actions:
-              - Name: deploy-live
-                InputArtifacts:
-                  - Name: SourceOutput
-                ActionTypeId:
-                  Category: Deploy
-                  Owner: AWS
-                  Provider: CloudFormation
-                  Version: 1
-                Configuration:
-                  ActionMode: REPLACE_ON_FAILURE
-                  StackName: zgallery-deploy-live
-                  RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
-                  Capabilities: CAPABILITY_IAM
-                  TemplatePath: SourceOutput::infrastructure/deploy.yaml
-                  ParameterOverrides: |
-                    {
-                      "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]},
-                      "Environment": "live"
-                    }
-                RunOrder: 1
+#        - Name: DeployLive
+#          Actions:
+#              - Name: deploy-live
+#                InputArtifacts:
+#                  - Name: SourceOutput
+#                ActionTypeId:
+#                  Category: Deploy
+#                  Owner: AWS
+#                  Provider: CloudFormation
+#                  Version: 1
+#                Configuration:
+#                  ActionMode: REPLACE_ON_FAILURE
+#                  StackName: zgallery-deploy-live
+#                  RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
+#                  Capabilities: CAPABILITY_IAM
+#                  TemplatePath: SourceOutput::infrastructure/deploy.yaml
+#                  ParameterOverrides: |
+#                    {
+#                      "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]},
+#                      "Environment": "live"
+#                    }
+#                RunOrder: 1
 
   ZGalleryPipelineServiceRole:
     Type: AWS::IAM::Role
@@ -425,6 +425,7 @@ Resources:
                   - ssm:GetParameters
                 Resource:
                   - arn:aws:ssm:*:*:parameter/aws/service/*
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/arn
               - Effect: Allow
                 Action:
                   - ecr:DescribeRepositories
@@ -462,3 +463,8 @@ Resources:
                 Resource:
                   - arn:aws:route53:::hostedzone/*
                   - arn:aws:route53:::change/*
+              - Effect: Allow
+                Action:
+                  - cloudfront:*
+                Resource:
+                  - '*'
