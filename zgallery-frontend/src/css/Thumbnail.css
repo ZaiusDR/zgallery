@@ -1,0 +1,37 @@
+.Thumbnail-container {
+    display: grid;
+    text-align: center;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 2s, opacity 2s linear;
+}
+
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 2s linear;
+}
+
+.loader-horizontal {
+    display: inline-block;
+}
+
+.Thumbnail-image {
+    position: relative;
+    display: inline-block;
+}
+
+.layer-1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.layer-2 {
+    grid-column: 1;
+    grid-row: 1;
+}

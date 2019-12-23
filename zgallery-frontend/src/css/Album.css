@@ -1,7 +1,3 @@
-.Album-image {
-    max-width: 20%;
-}
-
 .Albums-container {
     margin-top: 25px;
     font-size: 21px;
@@ -12,6 +8,12 @@
     -ms-animation: fadein 2s; /* Internet Explorer */
     -o-animation: fadein 2s; /* Opera < 12.1 */
     animation: fadein 2s;
+}
+
+.Album-container {
+    display: grid;
+    align-content: center;
+    justify-content: center;
 }
 
 .Album-name {

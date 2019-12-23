@@ -3,7 +3,7 @@ import Album from './Album';
 import {configuration} from '../settings';
 
 import '../css/Gallery.css';
-import '../css/spinner.css';
+import '../css/spinners.css';
 
 class Gallery extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class Gallery extends Component {
   };
 
   componentDidMount() {
-    this.fetchAlbums()
+    this.fetchAlbums();
   }
 
   fetchAlbums() {
@@ -23,7 +23,7 @@ class Gallery extends Component {
       .then(results => {
         return results.json();
       }).then(data => {
-        this.setState({ isLoading: false, albums: data })
+        this.setState({albums: data, isLoading: false});
       }).catch(error => {
        console.log(error);
     });
@@ -37,11 +37,10 @@ class Gallery extends Component {
             {!this.state.isLoading ?
               this.state.albums.map(album =>
                 <Album key={album.albumName}
-                       name={album.albumName}
-                       thumbs={album.thumbs}
+                       album={album}
                 />)
               :
-              <div className="loader">Loading...</div>
+              <div className="loader"/>
             }
           </div>
       </div>

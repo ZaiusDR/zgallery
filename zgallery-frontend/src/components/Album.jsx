@@ -1,19 +1,22 @@
 import React, {Component} from "react";
-import { configuration } from "../settings";
+
 import "../css/Album.css";
+import Thumbnail from "./Thumbnail";
 
 class Album extends Component {
   render() {
     return(
       <div>
-        <div>
-          <img className="Album-image"
-               src={`${configuration.mediaServer}${this.props.name}/thumbs/${this.props.thumbs[0]}`}
-               alt={this.props.name}
-          />
+        <div className="Album-container">
+          {this.props.album.thumbs.map(thumbnail =>
+            <Thumbnail key={thumbnail}
+                       albumName={this.props.album.albumName}
+                       thumbnail={thumbnail}
+            />
+          )}
         </div>
         <div>
-          <p className="Album-name">{this.props.name}</p>
+          <p className="Album-name">{this.props.album.albumName}</p>
         </div>
       </div>
     )
