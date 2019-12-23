@@ -11,6 +11,7 @@ class Album extends Component {
           {this.props.album.thumbs.map(thumbnail =>
             <Thumbnail key={thumbnail}
                        albumName={this.props.album.albumName}
+                       activeThumb={this.props.album.activeThumb}
                        thumbnail={thumbnail}
             />
           )}

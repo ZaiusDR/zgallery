@@ -18,7 +18,7 @@ class Thumbnail extends Component {
           <span className={this.state.loaded ? "loader-horizontal hidden" : "loader-horizontal visible"}/>
         </div>
         <div className="layer-2">
-          <img className={this.state.loaded ? "Thumbnail-image visible" : "Thumbnail-image hidden"}
+          <img className={this.state.loaded && this.props.activeThumb === this.props.thumbnail ? "Thumbnail-image visible" : "Thumbnail-image hidden"}
                onLoad={this.handleOnLoaded}
                src={`${configuration.mediaServer}${this.props.albumName}/thumbs/${this.props.thumbnail}`}
                alt={this.props.albumName}
