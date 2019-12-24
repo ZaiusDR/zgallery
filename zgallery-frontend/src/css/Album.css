@@ -17,8 +17,12 @@
 }
 
 .Album-name {
+    color: white;
+    margin: 40% 25% 25% 25%;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 15;
     font-size: calc(15px + 2vmin);
-    color: dimgrey;
 }
 
 @keyframes fadein {

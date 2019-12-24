@@ -8,13 +8,14 @@
 .hidden {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s 2s, opacity 2s linear;
+    transition: visibility 0.3s 0.3s, opacity 0.3s linear;
 }
 
 .visible {
     visibility: visible;
-    opacity: 1;
-    transition: opacity 2s linear;
+    opacity: 0.7;
+    filter: alpha(opacity=100);
+    transition: opacity 0.3s linear;
 }
 
 .loader-horizontal {
@@ -26,12 +27,17 @@
     display: inline-block;
 }
 
-.layer-1 {
+.visible:hover {
+    opacity: 1;
+    transition:  opacity 0.3s linear;
+}
+
+.spinner-layer {
     grid-column: 1;
     grid-row: 1;
 }
 
-.layer-2 {
+.image-layer {
     grid-column: 1;
     grid-row: 1;
 }

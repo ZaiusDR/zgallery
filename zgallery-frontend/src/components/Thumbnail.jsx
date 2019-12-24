@@ -14,10 +14,10 @@ class Thumbnail extends Component {
   render() {
     return(
       <div className="Thumbnail-container">
-        <div className="layer-1">
+        <div className="spinner-layer">
           <span className={this.state.loaded ? "loader-horizontal hidden" : "loader-horizontal visible"}/>
         </div>
-        <div className="layer-2">
+        <div className="image-layer">
           <img className={this.state.loaded && this.props.activeThumb === this.props.thumbnail ? "Thumbnail-image visible" : "Thumbnail-image hidden"}
                onLoad={this.handleOnLoaded}
                src={`${configuration.mediaServer}${this.props.albumName}/thumbs/${this.props.thumbnail}`}

@@ -8,6 +8,7 @@ class Album extends Component {
     return(
       <div>
         <div className="Album-container">
+          <p className="Album-name">{this.props.album.albumName}</p>
           {this.props.album.thumbs.map(thumbnail =>
             <Thumbnail key={thumbnail}
                        albumName={this.props.album.albumName}
@@ -15,9 +16,6 @@ class Album extends Component {
                        thumbnail={thumbnail}
             />
           )}
-        </div>
-        <div>
-          <p className="Album-name">{this.props.album.albumName}</p>
         </div>
       </div>
     )
