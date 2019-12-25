@@ -14,6 +14,7 @@ class Album extends Component {
                        albumName={this.props.album.albumName}
                        activeThumb={this.props.album.activeThumb}
                        thumbnail={thumbnail}
+                       handleOnClickAlbum={this.props.handleOnClickAlbum}
             />
           )}
         </div>

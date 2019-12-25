@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Adapter from 'enzyme-adapter-react-16';
-import { shallow, configure } from 'enzyme';
+import { mount, shallow, configure } from 'enzyme';
 import waitUntil from 'async-wait-until';
 import fetchMock from 'fetch-mock';
 
@@ -13,6 +13,7 @@ import {configuration} from '../settings';
 configure({ adapter: new Adapter() });
 
 const backendUrl = `http://${configuration.serverUrl}/api/v1/albums`;
+const mediaUrl = `${configuration.mediaServer}thumb01.jpg`;
 
 describe('<Gallery /> Tests', () => {
 
@@ -30,16 +31,14 @@ describe('<Gallery /> Tests', () => {
   afterEach(() => fetchMock.reset());
 
   test('should show a spinner while waiting', () => {
-    fetchMock.mock(backendUrl, expectedResponse );
-
+    fetchMock.mock(backendUrl, expectedResponse);
     const wrapper = shallow(<Gallery />);
 
     expect(wrapper.find('div.loader').length).toBe(1);
   });
 
   test('renders Albums when API response received', async (done) => {
-    fetchMock.mock(backendUrl, expectedResponse );
-
+    fetchMock.mock(backendUrl, expectedResponse);
     const wrapper = shallow(<Gallery />);
 
     await waitUntil(() => wrapper.state('albums') !== null);
@@ -48,4 +47,23 @@ describe('<Gallery /> Tests', () => {
     expect(wrapper.find('div.loader').length).toBe(0);
     done();
   });
+
+  test('should render modal for album pictures', async(done) => {
+    fetchMock.mock(backendUrl, expectedResponse);
+    fetchMock.mock(`${backendUrl}/album0`, ['pic01.jpg', 'pic02.jpg']);
+    fetchMock.mock(`${backendUrl}/album1`, ['pic01.jpg', 'pic02.jpg']);
+    fetchMock.mock(`${mediaUrl}/*`, {});
+    const wrapper = mount(<Gallery />);
+
+    await waitUntil(() => wrapper.state('albums') !== null);
+
+    wrapper.update();
+    wrapper.find('img.Thumbnail-image').first().simulate('click');
+
+    await waitUntil(() => wrapper.state('carouselOpen'));
+    wrapper.update();
+
+    expect(wrapper.find('div.Carousel-container').length).toBe(1);
+    done();
+  })
 });

@@ -20,6 +20,7 @@ class Thumbnail extends Component {
         <div className="image-layer">
           <img className={this.state.loaded && this.props.activeThumb === this.props.thumbnail ? "Thumbnail-image visible" : "Thumbnail-image hidden"}
                onLoad={this.handleOnLoaded}
+               onClick={() => this.props.handleOnClickAlbum(this.props.albumName)}
                src={`${configuration.mediaServer}${this.props.albumName}/thumbs/${this.props.thumbnail}`}
                alt={this.props.albumName}
           />

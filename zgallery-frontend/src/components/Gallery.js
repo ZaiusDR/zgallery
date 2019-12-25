@@ -10,6 +10,7 @@ class Gallery extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      carouselOpen: false,
       albums: [],
     };
     this.timerId = null;
@@ -65,6 +66,19 @@ class Gallery extends Component {
     return album.thumbs[Math.floor(Math.random() * configuration.maxThumbnails)]
   }
 
+  handleOnClickAlbum = albumName => {
+    fetch(`http://${configuration.serverUrl}/api/v1/albums/${albumName}`)
+      .then(response => response.json())
+      .then(data => this.setState(
+        {carouselAlbumName: albumName, carouselOpen: true, carouselPicturesList: data})
+      )
+      .catch(error => console.log(error));
+  };
+
+  handleOnClickClose = () => {
+    this.setState({carouselOpen: false});
+  };
+
   render() {
     return (
       <div className="Gallery">
@@ -74,11 +88,23 @@ class Gallery extends Component {
               this.state.albums.map(album =>
                 <Album key={album.albumName}
                        album={album}
+                       handleOnClickAlbum={this.handleOnClickAlbum}
                 />)
               :
               <div className="loader"/>
             }
           </div>
+        {this.state.carouselOpen ?
+          <div className={`${this.state.carouselOpen}` ? "Carousel-container visible" : "Carousel-container"}>
+            <span className="close"
+                  onClick={this.handleOnClickClose}>&times;</span>
+            <img className="Album-image"
+                 src={`${configuration.mediaServer}${this.state.carouselAlbumName}/${this.state.carouselPicturesList[0]}`}
+                 alt={this.state.carouselAlbumName}/>
+          </div>
+          :
+          <span/>
+        }
       </div>
     );
   }
