@@ -95,7 +95,7 @@ class Gallery extends Component {
             }
           </div>
         {this.state.carouselOpen ?
-          <div className={`${this.state.carouselOpen}` ? "Carousel-container visible" : "Carousel-container"}>
+          <div className={`${this.state.carouselOpen}` ? "Carousel-container Carousel-visible" : "Carousel-container"}>
             <span className="close"
                   onClick={this.handleOnClickClose}>&times;</span>
             <img className="Album-image"
