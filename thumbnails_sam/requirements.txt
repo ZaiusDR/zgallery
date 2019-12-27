@@ -1,0 +1,5 @@
+boto3
+moto
+Pillow
+pytest
+python-resize-image

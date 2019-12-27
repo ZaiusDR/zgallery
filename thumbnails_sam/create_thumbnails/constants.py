@@ -1,0 +1,2 @@
+RESIZED_FOLDER = 'resized/'
+RESIZED_HEIGHT = 1500
