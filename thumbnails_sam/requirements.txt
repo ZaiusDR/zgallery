@@ -1,0 +1,5 @@
+boto3
+moto
+pprint
+pytest
+pytest-mock
