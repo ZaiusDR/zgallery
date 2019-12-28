@@ -15,7 +15,7 @@ phases:
       - echo 'Updating pip...'
       - pip install -U pip
       - echo 'Installing dependencies...'
-      - pip install -r build_requirements.txt
+      - pip install -rU build_requirements.txt
   build:
     commands:
       - echo 'Running tests...'
@@ -23,7 +23,7 @@ phases:
   post_build:
     commands:
       - echo 'Building SAM Applications...'
-      - sam build --use-container --debug
+      - sam build --debug
       - echo 'Packaging SAM Application...'
       - sam package --s3-bucket $BUCKET --output-template-file output-template.yaml --kms-key-id f1e23e0a-9c87-4ae6-98d6-196333ab4256
 
