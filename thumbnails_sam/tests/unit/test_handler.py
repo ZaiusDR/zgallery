@@ -76,4 +76,4 @@ def test_lambda_handler__should_add_resized_folder_to_orignal_path(event_s3_put_
 def test_lambda_handler__should_not_resize_on_resized_picture_put_events(event_s3_put_resized_object_event):
     returned_info = app.lambda_handler(event_s3_put_resized_object_event, '')
 
-    assert not returned_info
+    assert returned_info == {}

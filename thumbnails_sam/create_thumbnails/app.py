@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     picture_key = event['Records'][0]['s3']['object']['key']
 
     if RESIZED_FOLDER in picture_key:
-        return None
+        return {}
 
     s3 = boto3.resource('s3')
     bucket = s3.Bucket(bucket_name)
