@@ -17,7 +17,7 @@ phases:
   post_build:
     commands:
       - echo 'Building SAM Applications...'
-      - sam build
+      - sam build --debug
       - echo 'Packaging SAM Application...'
       - sam package --s3-bucket $BUCKET --output-template-file output-template.yaml --kms-key-id f1e23e0a-9c87-4ae6-98d6-196333ab4256
 
