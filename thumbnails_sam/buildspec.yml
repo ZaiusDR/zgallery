@@ -15,7 +15,7 @@ phases:
       - echo 'Updating pip...'
       - pip install -U pip
       - echo 'Installing dependencies...'
-      - pip install -rU build_requirements.txt
+      - pip install -Ur build_requirements.txt
   build:
     commands:
       - echo 'Running tests...'
