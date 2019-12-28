@@ -12,17 +12,12 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       AutoPublishAlias: live
+      FunctionName: create-thumbnails-function
       DeploymentPreference:
         Type: Canary10Percent30Minutes
       CodeUri: create_thumbnails/
       Handler: app.lambda_handler
       Runtime: python3.8
-      Events:
-        CreateThumbnailsEvent:
-          Type: S3
-          Properties:
-            Bucket: !ImportValue zgallery-pictures-bucket-name
-            Events: s3:ObjectCreated:Put
 
 
 Outputs:
