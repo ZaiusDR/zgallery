@@ -18,6 +18,9 @@ Resources:
       CodeUri: create_thumbnails/
       Handler: app.lambda_handler
       Runtime: python3.8
+      Policies:
+        - S3CrudPolicy:
+            BucketName: zgallery.pictures
 
 
 Outputs:
