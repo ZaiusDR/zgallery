@@ -1,3 +1,5 @@
 -r create_thumbnails/requirements.txt
+aws-sam-cli
+aws-sam-translator
 moto
 pytest

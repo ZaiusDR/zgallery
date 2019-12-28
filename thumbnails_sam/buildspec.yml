@@ -11,15 +11,6 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - echo 'Installing Homebrew...'
-      - sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-      - test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-      - test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-      - test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-      - echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-      - echo 'Installing AWS SAM CLI...'
-      - brew tap aws/tap
-      - brew install aws-sam-cli
       - cd thumbnails_sam
       - echo 'Updating pip...'
       - pip install -U pip
@@ -32,7 +23,7 @@ phases:
   post_build:
     commands:
       - echo 'Building SAM Applications...'
-      - sam build --debug
+      - sam build --use-container --debug
       - echo 'Packaging SAM Application...'
       - sam package --s3-bucket $BUCKET --output-template-file output-template.yaml --kms-key-id f1e23e0a-9c87-4ae6-98d6-196333ab4256
 
