@@ -14,7 +14,7 @@ Resources:
       AutoPublishAlias: live
       FunctionName: create-thumbnails-function
       DeploymentPreference:
-        Type: LambdaAllAtOnce
+        Type: AllAtOnce
       CodeUri: create_thumbnails/
       Handler: app.lambda_handler
       Runtime: python3.8
