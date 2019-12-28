@@ -14,7 +14,7 @@ Resources:
       AutoPublishAlias: live
       FunctionName: create-thumbnails-function
       DeploymentPreference:
-        Type: Canary10Percent30Minutes
+        Type: LambdaAllAtOnce
       CodeUri: create_thumbnails/
       Handler: app.lambda_handler
       Runtime: python3.8
