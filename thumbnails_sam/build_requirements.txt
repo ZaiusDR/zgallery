@@ -1,0 +1,4 @@
+-r create_thumbnails/requirements.txt
+aws-sam-cli
+moto
+pytest

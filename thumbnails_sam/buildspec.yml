@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      - cd thumbnails_sam
+      - echo 'Installing dependencies...'
+      - pip install -r build_requirements.txt
+  build:
+    commands:
+      - echo 'Running tests...'
+      - pytest -v --disable-warnings
