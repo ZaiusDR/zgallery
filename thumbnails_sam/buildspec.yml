@@ -12,3 +12,13 @@ phases:
     commands:
       - echo 'Running tests...'
       - pytest -v --disable-warnings
+  post_build:
+    commands:
+      - echo 'Packaging SAM Application...'
+      - aws cloudformation package --template-file template.yml --s3-bucket $BUCKET --output-template-file output-template.yml
+
+artifacts:
+  type: zip
+  files:
+    - template.yml
+    - output-template.yml
