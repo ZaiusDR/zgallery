@@ -5,7 +5,7 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 15
+    Timeout: 60
 
 Resources:
   CreateThumbnailsFunction:
