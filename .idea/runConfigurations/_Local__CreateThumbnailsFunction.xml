@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="[Local] CreateThumbnailsFunction" type="aws.lambda" factoryName="Local" nameIsGenerated="true">
+    <option name="credentialProviderId" value="profile:default" />
+    <option name="regionId" value="eu-west-1" />
+    <option name="environmentVariables">
+      <map />
+    </option>
+    <option name="handler" />
+    <option name="logicalFunctionName" value="CreateThumbnailsFunction" />
+    <option name="memorySize" value="128" />
+    <option name="runtime" />
+    <option name="templateFile" value="$PROJECT_DIR$/thumbnails_sam/template.yaml" />
+    <option name="timeout" value="3" />
+    <option name="useTemplate" value="true" />
+    <option name="input" value="$PROJECT_DIR$/thumbnails_sam/events/event.json" />
+    <option name="inputIsFile" value="true" />
+    <sam>
+      <option name="additionalBuildArgs" value="" />
+      <option name="additionalLocalArgs" value="--debug" />
+      <option name="buildInContainer" value="true" />
+      <option name="dockerNetwork" value="" />
+      <option name="skipImagePull" value="false" />
+    </sam>
+    <method v="2" />
+  </configuration>
+</component>
