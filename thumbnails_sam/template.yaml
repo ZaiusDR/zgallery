@@ -16,24 +16,13 @@ Resources:
         Type: Canary10Percent30Minutes
       CodeUri: create_thumbnails/
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Events:
         CreateThumbnailsEvent:
-          Type: CloudWatchEvent
+          Type: S3
           Properties:
-            Pattern:
-              source:
-                - aws.s3
-              detail-type:
-                - AWS API Call via CloudTrail
-              detail:
-                event-source:
-                  - s3.amazonaws.com
-                event-name:
-                  - PutObject
-                requestParameters:
-                  bucketName:
-                    - !ImportValue zgallery-pictures-bucket-name
+            Bucket: !ImportValue zgallery-pictures-bucket-name
+            Events: s3:ObjectCreated:Put
 
 
 Outputs:
