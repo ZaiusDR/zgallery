@@ -158,6 +158,9 @@ Resources:
         Type: LINUX_CONTAINER
         Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
         ImagePullCredentialsType: CODEBUILD
+        EnvironmentVariables:
+          - Name: BUCKET
+            Value: !Ref ZGalleryPipelineBucket
       Source:
         Type: CODEPIPELINE
         BuildSpec: thumbnails_sam/buildspec.yml
@@ -262,7 +265,7 @@ Resources:
               RunOrder: 1
             - Name: zgallery-frontend-build
               InputArtifacts:
-                  - Name: SourceOutput
+                - Name: SourceOutput
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -273,7 +276,9 @@ Resources:
               RunOrder: 1
             - Name: zgallery-thumbnails-sam-build
               InputArtifacts:
-                  - Name: SourceOutput
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: ThumbnailsLambdaBuildOutput
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -284,6 +289,21 @@ Resources:
               RunOrder: 1
         - Name: DeployDev
           Actions:
+            - Name: deploy-create-thumbnails-sam
+              InputArtifacts:
+                - Name: ThumbnailsLambdaBuildOutput
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                StackName: zgallery-thumbnails-sam
+                RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
+                Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
+                TemplatePath: ThumbnailsLambdaBuildOutput::output-template.yaml
+              RunOrder: 1
             - Name: deploy-dev
               InputArtifacts:
                 - Name: SourceOutput
@@ -302,7 +322,7 @@ Resources:
                   {
                     "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]}
                   }
-              RunOrder: 1
+              RunOrder: 2
         - Name: E2ETests
           Actions:
             - Name: zgallery-backend-e2e-tests
@@ -316,28 +336,6 @@ Resources:
               Configuration:
                 ProjectName: e2e-zgallery-backend
               RunOrder: 1
-#        - Name: DeployLive
-#          Actions:
-#              - Name: deploy-live
-#                InputArtifacts:
-#                  - Name: SourceOutput
-#                ActionTypeId:
-#                  Category: Deploy
-#                  Owner: AWS
-#                  Provider: CloudFormation
-#                  Version: 1
-#                Configuration:
-#                  ActionMode: REPLACE_ON_FAILURE
-#                  StackName: zgallery-deploy-live
-#                  RoleArn: !GetAtt ZGalleryCreateInfraStepPipelineServiceRole.Arn
-#                  Capabilities: CAPABILITY_IAM
-#                  TemplatePath: SourceOutput::infrastructure/deploy.yaml
-#                  ParameterOverrides: |
-#                    {
-#                      "RandomId": { "Fn::GetArtifactAtt" : ["SourceOutput", "ObjectKey"]},
-#                      "Environment": "live"
-#                    }
-#                RunOrder: 1
 
   ZGalleryPipelineServiceRole:
     Type: AWS::IAM::Role
@@ -405,7 +403,7 @@ Resources:
                   - s3:*
                 Resource:
                   - arn:aws:s3:::zgallery.pictures
-                  - arn:aws:s3:::zgallery.cloud.trail
+                  - arn:aws:s3:::zgallery-pipeline/*
               - Effect: Allow
                 Action:
                   - ec2:Describe*
@@ -469,8 +467,11 @@ Resources:
                 Action:
                   - iam:CreateRole
                   - iam:DeleteRole
+                  - iam:GetRole
                   - iam:GetRolePolicy
                   - iam:PutRolePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
                   - iam:DeleteRolePolicy
                   - iam:CreateInstanceProfile
                   - iam:DeleteInstanceProfile
@@ -480,6 +481,7 @@ Resources:
                 Resource:
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-deploy-dev-ZGalleryInstanceRole-*
                   - !Sub arn:aws:iam::${AWS::AccountId}:instance-profile/zgallery-deploy-dev-ZGalleryInstanceProfile-*
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/zgallery-thumbnails-sam-*
               - Effect: Allow
                 Action:
                   - route53:ListHostedZones
@@ -500,6 +502,22 @@ Resources:
                   - '*'
               - Effect: Allow
                 Action:
-                  - cloudtrail:*
+                  - cloudformation:CreateChangeSet
                 Resource:
                   - '*'
+              - Effect: Allow
+                Action:
+                  - codedeploy:*
+                Resource:
+                  - !Sub arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:application:zgallery-thumbnails-sam-*
+                  - !Sub arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:zgallery-thumbnails-sam-*
+              - Effect: Allow
+                Action:
+                  - lambda:*
+                Resource:
+                  - !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:create-thumbnails-function*
+              - Effect: Allow
+                Action:
+                  - events:*
+                Resource:
+                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/zgallery-thumbnails-sam-*

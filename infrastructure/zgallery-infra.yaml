@@ -110,6 +110,22 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:Put
+            Function: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:create-thumbnails-function:live
+    DependsOn:
+      ZGalleryLambdaInvokePermission
+
+  # This is terrible but adding a bucket to the Lambda template would be a lot of work
+  ZGalleryLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:create-thumbnails-function:live
+      Action: 'lambda:InvokeFunction'
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: arn:aws:s3:::zgallery.pictures
 
   ZGalleryPicturesBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -247,60 +263,6 @@ Resources:
       VpcId: vpc-f4c2ec92
       HealthCheckPath: /health-check
       HealthyThresholdCount: 2
-
-  ZGalleryCloudTrailBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: zgallery.cloud.trail
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      LifecycleConfiguration:
-        Rules:
-          - ExpirationInDays: 15
-            Id: ExpireAfter15Days
-            Status: Enabled
-
-  ZGalleryCloudTrailBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref ZGalleryCloudTrailBucket
-      PolicyDocument:
-        Statement:
-          - Effect: Allow
-            Action:
-              - s3:PutObject
-            Resource:
-              - !Sub arn:aws:s3:::${ZGalleryCloudTrailBucket}/*
-            Principal:
-              Service: cloudtrail.amazonaws.com
-            Condition:
-              StringEquals:
-                's3:x-amz-acl': 'bucket-owner-full-control'
-          - Effect: Allow
-            Action:
-              - s3:GetBucketAcl
-            Resource:
-              - !Sub arn:aws:s3:::${ZGalleryCloudTrailBucket}
-            Principal:
-              Service: cloudtrail.amazonaws.com
-
-  ZGalleryS3EventsCloudTrail:
-    Type: AWS::CloudTrail::Trail
-    Properties:
-      TrailName: zgallery-cloud-trail
-      IsMultiRegionTrail: false
-      IsLogging: true
-      S3BucketName: !Ref ZGalleryCloudTrailBucket
-      EventSelectors:
-        - DataResources:
-            - Type: AWS::S3::Object
-              Values:
-              - !Sub ${ZGalleryPicturesBucket.Arn}/
-          ReadWriteType: WriteOnly
-    DependsOn:
-      - ZGalleryCloudTrailBucketPolicy
 
 
 Outputs:
