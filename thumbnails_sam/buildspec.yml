@@ -19,7 +19,7 @@ phases:
   build:
     commands:
       - echo 'Running tests...'
-      - pytest -v --disable-warnings
+      - python -m pytest tests -v --disable-warnings
   post_build:
     commands:
       - echo 'Building SAM Applications...'

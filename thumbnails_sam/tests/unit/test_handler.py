@@ -6,7 +6,7 @@ import pytest
 from moto import mock_s3
 from PIL import Image
 
-from thumbnails_sam.create_thumbnails import app
+from create_thumbnails import app
 
 
 @pytest.fixture
@@ -64,7 +64,7 @@ def test_lambda_handler__should_resize_to_1500_height_for_carousel(event_s3_put_
     resized_image = Image.open(io.BytesIO(image_data))
     width, height = resized_image.size
 
-    assert height == 1500
+    assert height == app.RESIZED_HEIGHT
 
 
 def test_lambda_handler__should_add_resized_folder_to_orignal_path(event_s3_put_object_event, s3_mock_fixture):

@@ -5,10 +5,11 @@ import logging
 from PIL import Image
 from resizeimage import resizeimage
 
-from thumbnails_sam.create_thumbnails import constants
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+RESIZED_FOLDER = 'resized/'
+RESIZED_HEIGHT = 1500
 
 
 def lambda_handler(event, context):
@@ -16,7 +17,7 @@ def lambda_handler(event, context):
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     picture_key = event['Records'][0]['s3']['object']['key']
 
-    if constants.RESIZED_FOLDER in picture_key:
+    if RESIZED_FOLDER in picture_key:
         return None
 
     s3 = boto3.resource('s3')
@@ -34,7 +35,7 @@ def lambda_handler(event, context):
 def _resize_picture(original_picture):
     file_byte_string = original_picture.get()['Body'].read()
     image = Image.open(io.BytesIO(file_byte_string))
-    resized_image = resizeimage.resize_height(image, constants.RESIZED_HEIGHT)
+    resized_image = resizeimage.resize_height(image, RESIZED_HEIGHT)
 
     return resized_image
 
@@ -43,7 +44,7 @@ def _get_resized_path(original_path):
     splitted_path = original_path.split('/')
     filename = splitted_path[-1]
     folder = '/'.join(splitted_path[0:-1])
-    return '{0}/{1}{2}'.format(folder, constants.RESIZED_FOLDER, filename)
+    return '{0}/{1}{2}'.format(folder, RESIZED_FOLDER, filename)
 
 
 def _upload_resized_image(bucket, picture_key, resized_image):
