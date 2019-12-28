@@ -146,6 +146,23 @@ Resources:
         BuildSpec: zgallery-frontend/buildspec.yml
       ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
 
+  ZGalleryThumbnailsSAMUnitTestsBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: build-zgallery-thumbnails-sam
+      Artifacts:
+        Type: CODEPIPELINE
+      Description: Run UnitTests for ZGallery CreateThumbnails SAM
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: thumbnails_sam/buildspec.yml
+      ServiceRole: !GetAtt ZGalleryUnitTestBuildProjectServiceRole.Arn
+
   ZGalleryE2ETestsBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -254,6 +271,17 @@ Resources:
               Configuration:
                 ProjectName: build-zgallery-frontend
               RunOrder: 1
+            - Name: zgallery-thumbnails-sam-build
+              InputArtifacts:
+                  - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: build-zgallery-thumbnails-sam
+              RunOrder: 1
         - Name: DeployDev
           Actions:
             - Name: deploy-dev
@@ -352,6 +380,7 @@ Resources:
                 Resource:
                   - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-backend'
                   - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-frontend'
+                  - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/build-zgallery-thumbnails-sam'
                   - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/e2e-zgallery-backend'
 
   ZGalleryCreateInfraStepPipelineServiceRole:
