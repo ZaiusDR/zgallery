@@ -6,6 +6,8 @@ phases:
       python: 3.8
     commands:
       - cd thumbnails_sam
+      - echo 'Updating pip...'
+      - pip install -U pip
       - echo 'Installing dependencies...'
       - pip install -r build_requirements.txt
   build:
