@@ -248,6 +248,55 @@ Resources:
       HealthCheckPath: /health-check
       HealthyThresholdCount: 2
 
+  ZGalleryCloudTrailBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: zgallery.cloud.trail
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  ZGalleryCloudTrailBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ZGalleryCloudTrailBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub arn:aws:s3:::${ZGalleryCloudTrailBucket}/*
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Condition:
+              StringEquals:
+                's3:x-amz-acl': 'bucket-owner-full-control'
+          - Effect: Allow
+            Action:
+              - s3:GetBucketAcl
+            Resource:
+              - !Sub arn:aws:s3:::${ZGalleryCloudTrailBucket}
+            Principal:
+              Service: cloudtrail.amazonaws.com
+
+  ZGalleryS3EventsCloudTrail:
+    Type: AWS::CloudTrail::Trail
+    Properties:
+      TrailName: zgallery-cloud-trail
+      IsMultiRegionTrail: false
+      IsLogging: true
+      S3BucketName: !Ref ZGalleryCloudTrailBucket
+      EventSelectors:
+        - DataResources:
+            - Type: AWS::S3::Object
+              Values:
+              - !Sub ${ZGalleryPicturesBucket.Arn}/
+          ReadWriteType: WriteOnly
+    DependsOn:
+      - ZGalleryCloudTrailBucketPolicy
+
 
 Outputs:
   ZGalleryTG:
@@ -260,3 +309,8 @@ Outputs:
     Value: !Ref ZGalleryBackendALBTargetGroup
     Export:
       Name: zgallery-backend-target-group
+  ZGalleryPicturesBucket:
+    Description: ZGallery Pictures Bucket Name
+    Value: !Ref ZGalleryPicturesBucket
+    Export:
+      Name: zgallery-pictures-bucket-name

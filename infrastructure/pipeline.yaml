@@ -405,6 +405,7 @@ Resources:
                   - s3:*
                 Resource:
                   - arn:aws:s3:::zgallery.pictures
+                  - arn:aws:s3:::zgallery.cloud.trail
               - Effect: Allow
                 Action:
                   - ec2:Describe*
@@ -495,5 +496,10 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudfront:*
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - cloudtrail:*
                 Resource:
                   - '*'
