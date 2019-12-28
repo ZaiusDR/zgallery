@@ -256,6 +256,11 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 15
+            Id: ExpireAfter15Days
+            Status: Enabled
 
   ZGalleryCloudTrailBucketPolicy:
     Type: AWS::S3::BucketPolicy
