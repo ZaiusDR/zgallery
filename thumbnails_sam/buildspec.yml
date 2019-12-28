@@ -15,10 +15,9 @@ phases:
   post_build:
     commands:
       - echo 'Packaging SAM Application...'
-      - aws cloudformation package --template-file template.yml --s3-bucket $BUCKET --output-template-file output-template.yml
+      - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file output-template.yaml
 
 artifacts:
   type: zip
   files:
-    - template.yml
-    - output-template.yml
+    - output-template.yaml
