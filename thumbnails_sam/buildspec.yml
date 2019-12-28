@@ -15,8 +15,7 @@ phases:
   post_build:
     commands:
       - echo 'Packaging SAM Application...'
-      - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file output-template.yaml --kms-key-id f1e23e0a-9c87-4ae6-98d6-196333ab4256
-      - ls -la
+      - sam package --s3-bucket $BUCKET --output-template-file output-template.yaml --kms-key-id f1e23e0a-9c87-4ae6-98d6-196333ab4256
 
 artifacts:
   type: zip
