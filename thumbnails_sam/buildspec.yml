@@ -20,4 +20,4 @@ phases:
 artifacts:
   type: zip
   files:
-    - output-template.yaml
+    - thumbnals_sam/output-template.yaml
