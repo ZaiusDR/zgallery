@@ -99,7 +99,7 @@ class Gallery extends Component {
             <span className="close"
                   onClick={this.handleOnClickClose}>&times;</span>
             <img className="Album-image"
-                 src={`${configuration.mediaServer}${this.state.carouselAlbumName}/${this.state.carouselPicturesList[0]}`}
+                 src={`${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${this.state.carouselPicturesList[0]}`}
                  alt={this.state.carouselAlbumName}/>
           </div>
           :
