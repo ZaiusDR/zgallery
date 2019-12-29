@@ -83,14 +83,12 @@ class Gallery extends Component {
   };
 
   render() {
-    let images = [];
-    images = this.state.carouselOpen ? this.state.carouselPicturesList.map(picture => {
+    const images = this.state.carouselOpen ? this.state.carouselPicturesList.map(picture => {
       return {
         original: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
-        thumbnail: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`
+        thumbnail: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`,
+        thumbnailClass: 'Carousel-thumbnail'
     }}) : [];
-    console.log(images);
-    console.log(typeof images);
 
     return (
       <div className="Gallery">
@@ -114,8 +112,9 @@ class Gallery extends Component {
             <ImageGallery
               items={images}
               infinite={true}
-              lazyLoad={true}
               showPlayButton={false}
+              showIndex={true}
+              slideDuration={350}
             />
           </div>
           :

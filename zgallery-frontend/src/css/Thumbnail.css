@@ -28,10 +28,12 @@
     max-width: 100%;
 }
 
-.visible:hover {
+.visible:hover,
+.visible:focus {
     filter: grayscale(0%);
     opacity: 1;
     transition:  opacity 0.3s linear;
+    cursor: pointer;
 }
 
 .spinner-layer {
