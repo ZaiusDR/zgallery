@@ -28,6 +28,11 @@
     background-color: rgba(0,0,0,.2);
 }
 
+.Album-name:hover,
+.Album-name:focus {
+    cursor: pointer;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
