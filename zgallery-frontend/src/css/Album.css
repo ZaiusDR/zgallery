@@ -1,6 +1,5 @@
 .Albums-container {
-    margin-top: 25px;
-    font-size: 21px;
+    margin-top: 1%;
     text-align: center;
 
     -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
@@ -17,12 +16,16 @@
 }
 
 .Album-name {
+    font-weight: bold;
+    text-transform: capitalize;
     color: white;
     margin: 40% 25% 25% 25%;
     grid-column: 1;
     grid-row: 1;
     z-index: 15;
-    font-size: calc(15px + 2vmin);
+    text-shadow: 1px 1px gray;
+    font-size: calc(15px + 5vmin);
+    background-color: rgba(0,0,0,.2);
 }
 
 @keyframes fadein {
