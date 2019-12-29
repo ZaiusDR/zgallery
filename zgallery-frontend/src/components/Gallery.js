@@ -87,6 +87,16 @@ class Gallery extends Component {
       return {
         original: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
         thumbnail: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`,
+        imageSet: [
+          {
+            srcSet: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`,
+            media : '(max-width: 700px)',
+          },
+          {
+            srcSet: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
+            media : '(min-width: 700px)',
+          }
+        ],
         thumbnailClass: 'Carousel-thumbnail'
     }}) : [];
 
