@@ -112,7 +112,7 @@ Resources:
               SSEAlgorithm: AES256
       NotificationConfiguration:
         LambdaConfigurations:
-          - Event: s3:ObjectCreated:Put
+          - Event: s3:ObjectCreated:*
             Function: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:create-thumbnails-function:live
     DependsOn:
       ZGalleryLambdaInvokePermission
