@@ -10,7 +10,7 @@ function parseAlbumNames(data) {
 
 function parsePictureNames(data) {
   return data.Contents
-    .filter((item) => (!item.Key.endsWith('/') && !item.Key.includes('/thumbs')))
+    .filter((item) => (!item.Key.endsWith('/') && !item.Key.includes('/thumbs') && !item.Key.includes('/resized')))
     .map((item) => item.Key.split('/').slice(-1).pop());
 }
 
