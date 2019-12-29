@@ -21,11 +21,13 @@
     display: inline-block;
 }
 
-.Thumbnail-image {
-    filter: grayscale(50%);
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
+@media only screen and (max-width: 700px) {
+    .Thumbnail-image {
+        filter: grayscale(50%);
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
 }
 
 .visible:hover,

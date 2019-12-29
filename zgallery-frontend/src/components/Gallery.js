@@ -104,8 +104,7 @@ class Gallery extends Component {
               <div className="loader"/>
             }
           </div>
-        {this.state.carouselOpen ?
-          <div className={`${this.state.carouselOpen}` ? "Carousel-container Carousel-visible" : "Carousel-container"}>
+          <div className={this.state.carouselOpen ? "Carousel-container Carousel-visible" : "Carousel-container"}>
             <span className="close"
                   onClick={this.handleOnClickClose}>&times;
             </span>
@@ -117,9 +116,6 @@ class Gallery extends Component {
               slideDuration={350}
             />
           </div>
-          :
-          <span/>
-        }
       </div>
     );
   }
