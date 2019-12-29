@@ -511,6 +511,7 @@ Resources:
                 Resource:
                   - !Sub arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:application:zgallery-thumbnails-sam-*
                   - !Sub arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:zgallery-thumbnails-sam-*
+                  - !Sub arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentconfig:*
               - Effect: Allow
                 Action:
                   - lambda:*
