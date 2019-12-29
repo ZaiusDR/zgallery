@@ -24,6 +24,13 @@ def event_s3_put_resized_object_event():
 
 
 @pytest.fixture
+def event_s3_put_thumbnail_object_event():
+    with open('events/upload_thumbnail_picture.json') as json_file:
+        event_json = json.load(json_file)
+    return event_json
+
+
+@pytest.fixture
 def test_image():
     image = Image.new(mode='RGB', size=(2500, 3000), color='red')
     in_mem_file = io.BytesIO()
@@ -59,7 +66,7 @@ def test_lambda_handler__should_resize_to_1500_height_for_carousel(event_s3_put_
 
     image_data = s3_mock_fixture.Object(
         bucket_name=returned_info['bucket_name'],
-        key=returned_info['key']
+        key=returned_info['resized']
     ).get()['Body'].read()
     resized_image = Image.open(io.BytesIO(image_data))
     width, height = resized_image.size
@@ -67,13 +74,33 @@ def test_lambda_handler__should_resize_to_1500_height_for_carousel(event_s3_put_
     assert height == app.RESIZED_HEIGHT
 
 
+def test_lambda_handler__should_create_a_thumbnail(event_s3_put_object_event, s3_mock_fixture):
+    returned_info = app.lambda_handler(event_s3_put_object_event, '')
+
+    image_data = s3_mock_fixture.Object(
+        bucket_name=returned_info['bucket_name'],
+        key=returned_info['thumbs']
+    ).get()['Body'].read()
+    resized_image = Image.open(io.BytesIO(image_data))
+    width, height = resized_image.size
+
+    assert height == app.THUMBNAIL_HEIGHT
+
+
 def test_lambda_handler__should_add_resized_folder_to_orignal_path(event_s3_put_object_event, s3_mock_fixture):
     returned_info = app.lambda_handler(event_s3_put_object_event, '')
 
-    assert returned_info['key'] == 'prod/album0/resized/HappyFace.jpg'
+    assert returned_info['resized'] == 'prod/album0/resized/HappyFace.jpg'
+    assert returned_info['thumbs'] == 'prod/album0/thumbs/HappyFace.jpg'
 
 
 def test_lambda_handler__should_not_resize_on_resized_picture_put_events(event_s3_put_resized_object_event):
     returned_info = app.lambda_handler(event_s3_put_resized_object_event, '')
+
+    assert returned_info == {}
+
+
+def test_lambda_handler__should_not_resize_on_thumbnail_picture_put_events(event_s3_put_thumbnail_object_event):
+    returned_info = app.lambda_handler(event_s3_put_thumbnail_object_event, '')
 
     assert returned_info == {}
