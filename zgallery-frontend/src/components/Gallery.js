@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import Album from './Album';
 import {configuration} from '../settings';
+import ImageGallery from 'react-image-gallery';
+
+import "react-image-gallery/styles/css/image-gallery.css";
 
 import '../css/Gallery.css';
 import '../css/spinners.css';
@@ -80,6 +83,15 @@ class Gallery extends Component {
   };
 
   render() {
+    let images = [];
+    images = this.state.carouselOpen ? this.state.carouselPicturesList.map(picture => {
+      return {
+        original: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
+        thumbnail: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`
+    }}) : [];
+    console.log(images);
+    console.log(typeof images);
+
     return (
       <div className="Gallery">
         <header className="Gallery-header">ZGallery</header>
@@ -97,10 +109,14 @@ class Gallery extends Component {
         {this.state.carouselOpen ?
           <div className={`${this.state.carouselOpen}` ? "Carousel-container Carousel-visible" : "Carousel-container"}>
             <span className="close"
-                  onClick={this.handleOnClickClose}>&times;</span>
-            <img className="Album-image"
-                 src={`${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${this.state.carouselPicturesList[0]}`}
-                 alt={this.state.carouselAlbumName}/>
+                  onClick={this.handleOnClickClose}>&times;
+            </span>
+            <ImageGallery
+              items={images}
+              infinite={true}
+              lazyLoad={true}
+              showPlayButton={false}
+            />
           </div>
           :
           <span/>
