@@ -3,7 +3,6 @@ import io
 import logging
 
 from PIL import Image
-from resizeimage import resizeimage
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -66,6 +65,7 @@ def _get_resized_path(original_path, resized_folder):
 
 
 def _upload_resized_image(bucket, picture_key, resized_image):
+    print(picture_key)
     in_mem_file = io.BytesIO()
     resized_image.save(in_mem_file, format='JPEG', quality=80, optimize=True, progressive=True)
     in_mem_file.seek(0)
