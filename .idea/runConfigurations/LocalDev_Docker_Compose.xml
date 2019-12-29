@@ -3,6 +3,7 @@
     <deployment type="docker-compose.yml">
       <settings>
         <option name="removeVolumesOnComposeDown" value="true" />
+        <option name="commandLineOptions" value="--build" />
         <option name="sourceFilePath" value="local_dev/docker-compose.yml" />
       </settings>
     </deployment>

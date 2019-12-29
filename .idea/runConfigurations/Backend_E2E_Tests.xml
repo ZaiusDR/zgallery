@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Backend E2E Tests" type="mocha-javascript-test-runner">
+    <node-interpreter>project</node-interpreter>
+    <node-options />
+    <mocha-package>$PROJECT_DIR$/zgallery-backend/node_modules/mocha</mocha-package>
+    <working-directory>$PROJECT_DIR$/zgallery-backend</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs>
+      <env name="NODE_ENV" value="production" />
+    </envs>
+    <ui>bdd</ui>
+    <extra-mocha-options />
+    <test-kind>SUITE</test-kind>
+    <test-file>$PROJECT_DIR$/zgallery-backend/e2e/api.js</test-file>
+    <test-names>
+      <name value="API E2E Tests" />
+    </test-names>
+    <method v="2" />
+  </configuration>
+</component>
