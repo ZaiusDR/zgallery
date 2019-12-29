@@ -27,9 +27,10 @@ def lambda_handler(event, context):
     resized_image = _resize_picture(original_picture)
     sent_data = _upload_resized_image(bucket, _get_resized_path(original_picture.key), resized_image)
 
-    logger.info('Resized picture uploaded: {0}'.format(sent_data))
+    sent_data_as_json = {'bucket_name': sent_data.bucket_name, 'key': sent_data.key}
+    logger.info('Resized picture uploaded: {0}'.format(sent_data_as_json))
 
-    return sent_data
+    return sent_data_as_json
 
 
 def _resize_picture(original_picture):
