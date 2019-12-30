@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Album from './Album';
 import {configuration} from '../settings';
 import ImageGallery from 'react-image-gallery';
+import DeviceOrientation, { Orientation } from 'react-screen-orientation';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 
@@ -14,9 +15,11 @@ class Gallery extends Component {
     this.state = {
       isLoading: true,
       carouselOpen: false,
+      isFullScreen: false,
       albums: [],
     };
     this.timerId = null;
+    this.imageGallery = React.createRef();
   };
 
   componentDidMount() {
@@ -82,10 +85,19 @@ class Gallery extends Component {
         {carouselAlbumName: albumName, carouselOpen: true, carouselPicturesList: data})
       )
       .catch(error => console.log(error));
+    this.imageGallery.current.fullScreen();
+    this.setState({isFullScreen: true})
   };
 
   handleOnClickClose = () => {
     this.setState({carouselOpen: false});
+    this.imageGallery.current.exitFullScreen();
+    this.setState({isFullScreen: false});
+    console.log('close button pressed');
+  };
+
+  _renderCustomControls = () => {
+    return <button type="button" className="close image-gallery-icon" onClick={this.handleOnClickClose}>&times; </button>
   };
 
   render() {
@@ -121,16 +133,24 @@ class Gallery extends Component {
             }
           </div>
           <div className={this.state.carouselOpen ? "Carousel-container Carousel-visible" : "Carousel-container"}>
-            <span className="close"
-                  onClick={this.handleOnClickClose}>&times;
-            </span>
             <ImageGallery
+              ref={this.imageGallery}
               items={images}
               infinite={true}
               showPlayButton={false}
               showIndex={true}
               slideDuration={350}
+              fullScreenButton={false}
+              renderCustomControls={this._renderCustomControls}
             />
+            {this.state.isFullScreen ?
+              <DeviceOrientation lockOrientation={'landscape'}>
+                <Orientation orientation='landscape' alwaysRender={true}>
+                </Orientation>
+              </DeviceOrientation>
+              :
+              null
+            }
           </div>
       </div>
     );
