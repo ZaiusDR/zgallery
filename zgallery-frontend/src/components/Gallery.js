@@ -1,20 +1,18 @@
 import React, {Component} from 'react';
 import Album from './Album';
+import Carousel from './Carousel';
 import {configuration} from '../settings';
-import ImageGallery from 'react-image-gallery';
-import DeviceOrientation, { Orientation } from 'react-screen-orientation';
-
-import "react-image-gallery/styles/css/image-gallery.css";
 
 import '../css/Gallery.css';
 import '../css/spinners.css';
+
 
 class Gallery extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      carouselOpen: false,
+      isCarouselOpen: false,
       isFullScreen: false,
       albums: [],
     };
@@ -56,7 +54,7 @@ class Gallery extends Component {
 
   randomizeThumbs() {
     this.timerId = setInterval(() => {
-      if (this.state.carouselOpen) {
+      if (this.state.isCarouselOpen) {
         return
       }
       const updatedAlbums = this.state.albums.map(album => {
@@ -82,42 +80,21 @@ class Gallery extends Component {
     fetch(`http://${configuration.serverUrl}/api/v1/albums/${albumName}`)
       .then(response => response.json())
       .then(data => this.setState(
-        {carouselAlbumName: albumName, carouselOpen: true, carouselPicturesList: data})
+        {carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data})
       )
       .catch(error => console.log(error));
     this.imageGallery.current.fullScreen();
     this.setState({isFullScreen: true})
   };
 
-  handleOnClickClose = () => {
-    this.setState({carouselOpen: false});
+  handleOnCarouselClickClose = () => {
+    this.setState({isCarouselOpen: false});
     this.imageGallery.current.exitFullScreen();
     this.setState({isFullScreen: false});
     console.log('close button pressed');
   };
 
-  _renderCustomControls = () => {
-    return <button type="button" className="close image-gallery-icon" onClick={this.handleOnClickClose}>&times; </button>
-  };
-
   render() {
-    const images = this.state.carouselOpen ? this.state.carouselPicturesList.map(picture => {
-      return {
-        original: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
-        thumbnail: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`,
-        imageSet: [
-          {
-            srcSet: `${configuration.mediaServer}${this.state.carouselAlbumName}/thumbs/${picture}`,
-            media : '(max-width: 700px)',
-          },
-          {
-            srcSet: `${configuration.mediaServer}${this.state.carouselAlbumName}/resized/${picture}`,
-            media : '(min-width: 700px)',
-          }
-        ],
-        thumbnailClass: 'Carousel-thumbnail'
-    }}) : [];
-
     return (
       <div className="Gallery">
         <header className="Gallery-header">ZGallery</header>
@@ -132,26 +109,14 @@ class Gallery extends Component {
               <div className="loader"/>
             }
           </div>
-          <div className={this.state.carouselOpen ? "Carousel-container Carousel-visible" : "Carousel-container"}>
-            <ImageGallery
-              ref={this.imageGallery}
-              items={images}
-              infinite={true}
-              showPlayButton={false}
-              showIndex={true}
-              slideDuration={350}
-              fullScreenButton={false}
-              renderCustomControls={this._renderCustomControls}
-            />
-            {this.state.isFullScreen ?
-              <DeviceOrientation lockOrientation={'landscape'}>
-                <Orientation orientation='landscape' alwaysRender={true}>
-                </Orientation>
-              </DeviceOrientation>
-              :
-              null
-            }
-          </div>
+          <Carousel
+            isCarouselOpen={this.state.isCarouselOpen}
+            carouselPicturesList={this.state.carouselPicturesList}
+            carouselAlbumName={this.state.carouselAlbumName}
+            isFullScreen={this.state.isFullScreen}
+            refImageGallery={this.imageGallery}
+            onCarouselClickClose={this.handleOnCarouselClickClose}
+          />
       </div>
     );
   }

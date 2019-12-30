@@ -48,7 +48,7 @@ describe('<Gallery /> Tests', () => {
     done();
   });
 
-  test('should render modal for album pictures', async(done) => {
+  test('should render modal with Carousel album pictures', async(done) => {
     fetchMock.mock(backendUrl, expectedResponse);
     fetchMock.mock(`${backendUrl}/album0`, ['pic01.jpg', 'pic02.jpg']);
     fetchMock.mock(`${backendUrl}/album1`, ['pic01.jpg', 'pic02.jpg']);
@@ -60,10 +60,10 @@ describe('<Gallery /> Tests', () => {
     wrapper.update();
     wrapper.find('img.Thumbnail-image').first().simulate('click');
 
-    await waitUntil(() => wrapper.state('carouselOpen'));
+    await waitUntil(() => wrapper.state('isCarouselOpen'));
     wrapper.update();
 
-    expect(wrapper.find('div.Carousel-container').length).toBe(1);
+    expect(wrapper.find('div.Carousel-container.Carousel-visible').length).toBe(1);
     done();
   })
 });
