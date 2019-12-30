@@ -13,15 +13,6 @@
   font-weight: lighter;
 }
 
-.Album-image {
-  margin: auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-  animation-name: fadein;
-  animation-duration: 0.3s;
-}
-
 @keyframes fadein {
   from {opacity: 0.1}
   to {opacity: 1}

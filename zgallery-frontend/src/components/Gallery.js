@@ -79,19 +79,18 @@ class Gallery extends Component {
   handleOnClickAlbum = albumName => {
     fetch(`http://${configuration.serverUrl}/api/v1/albums/${albumName}`)
       .then(response => response.json())
-      .then(data => this.setState(
-        {carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data})
-      )
+      .then(data => {
+        this.setState({carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data});
+        this.imageGallery.current.fullScreen();
+        this.setState({isFullScreen: true});
+      })
       .catch(error => console.log(error));
-    this.imageGallery.current.fullScreen();
-    this.setState({isFullScreen: true})
   };
 
   handleOnCarouselClickClose = () => {
     this.setState({isCarouselOpen: false});
     this.imageGallery.current.exitFullScreen();
     this.setState({isFullScreen: false});
-    console.log('close button pressed');
   };
 
   render() {
@@ -109,6 +108,7 @@ class Gallery extends Component {
               <div className="loader"/>
             }
           </div>
+        {this.state.isCarouselOpen ?
           <Carousel
             isCarouselOpen={this.state.isCarouselOpen}
             carouselPicturesList={this.state.carouselPicturesList}
@@ -117,6 +117,7 @@ class Gallery extends Component {
             refImageGallery={this.imageGallery}
             onCarouselClickClose={this.handleOnCarouselClickClose}
           />
+        : null}
       </div>
     );
   }
