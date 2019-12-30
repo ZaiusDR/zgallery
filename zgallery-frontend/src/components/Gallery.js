@@ -53,6 +53,9 @@ class Gallery extends Component {
 
   randomizeThumbs() {
     this.timerId = setInterval(() => {
+      if (this.state.carouselOpen) {
+        return
+      }
       const updatedAlbums = this.state.albums.map(album => {
         return {
           albumName: album.albumName,
@@ -66,7 +69,10 @@ class Gallery extends Component {
   }
 
   getRandomThumbnail(album) {
-    return album.thumbs[Math.floor(Math.random() * configuration.maxThumbnails)]
+    const maxRandomNumber = album.thumbs.length < configuration.maxThumbnails ?
+      album.thumbs.length : configuration.maxThumbnails;
+
+    return album.thumbs[Math.floor(Math.random() * maxRandomNumber)]
   }
 
   handleOnClickAlbum = albumName => {
