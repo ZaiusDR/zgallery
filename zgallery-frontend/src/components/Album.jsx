@@ -6,7 +6,7 @@ import Thumbnail from "./Thumbnail";
 class Album extends Component {
   render() {
     return(
-      <div>
+      <React.Fragment>
         <div className="Album-container">
           <p className="Album-name"
              onClick={() => this.props.handleOnClickAlbum(this.props.album.albumName)}>
@@ -21,7 +21,7 @@ class Album extends Component {
             />
           )}
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

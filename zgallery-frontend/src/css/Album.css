@@ -1,24 +1,27 @@
 .Albums-container {
+    display: flex;
+    flex-flow: column;
     margin-top: 1%;
-    text-align: center;
     animation: fadein 1s;
 }
 
 .Album-container {
     display: grid;
-    align-content: center;
     justify-content: center;
     animation: fadein 2s;
 }
 
 .Album-name {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    z-index: 15;
+    padding: 1% 2%;
+    margin: 25% 25% 25% 25%;
     font-weight: bold;
     text-transform: capitalize;
     color: white;
-    margin: 40% 25% 25% 25%;
-    grid-column: 1;
-    grid-row: 1;
-    z-index: 15;
     text-shadow: 1px 1px gray;
     font-size: calc(15px + 5vmin);
     background-color: rgba(0,0,0,.2);
