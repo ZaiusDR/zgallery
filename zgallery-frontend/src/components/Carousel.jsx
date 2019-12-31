@@ -38,7 +38,6 @@ class Carousel extends Component {
           infinite={true}
           showPlayButton={false}
           showIndex={true}
-          slideDuration={350}
           showFullscreenButton={false}
           renderCustomControls={this._renderCustomControls}
         />

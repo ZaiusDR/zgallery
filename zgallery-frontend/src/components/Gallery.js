@@ -3,8 +3,26 @@ import Album from './Album';
 import Carousel from './Carousel';
 import {configuration} from '../settings';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 import '../css/Gallery.css';
 import '../css/spinners.css';
+
+import { createMuiTheme } from '@material-ui/core/styles';
+import purple from '@material-ui/core/colors/purple';
+import green from '@material-ui/core/colors/green';
+import {ThemeProvider, responsiveFontSizes} from '@material-ui/core/styles';
+
+let theme = createMuiTheme({
+  palette: {
+    primary: purple,
+    secondary: green,
+  },
+  status: {
+    danger: 'orange',
+  },
+});
+theme = responsiveFontSizes(theme);
 
 
 class Gallery extends Component {
@@ -95,30 +113,38 @@ class Gallery extends Component {
 
   render() {
     return (
-      <div className="Gallery">
-        <header className="Gallery-header">ZGallery</header>
-          <div className="Albums-container">
-            {!this.state.isLoading ?
-              this.state.albums.map(album =>
-                <Album key={album.albumName}
-                       album={album}
-                       handleOnClickAlbum={this.handleOnClickAlbum}
-                />)
-              :
-              <div className="loader"/>
-            }
+      <React.Fragment>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <div className="Gallery">
+            <header className="Gallery-header">
+                <img className="Gallery-header-logo Gallery-header-item" src={'logo192.png'} />
+                <h1 className="Gallery-header-text Gallery-header-item">ZGallery</h1>
+            </header>
+            <div className="Albums-container">
+              {!this.state.isLoading ?
+                this.state.albums.map(album =>
+                  <Album key={album.albumName}
+                         album={album}
+                         handleOnClickAlbum={this.handleOnClickAlbum}
+                  />)
+                :
+                <div className="loader"/>
+              }
+            </div>
+            {this.state.isCarouselOpen ?
+              <Carousel
+                isCarouselOpen={this.state.isCarouselOpen}
+                carouselPicturesList={this.state.carouselPicturesList}
+                carouselAlbumName={this.state.carouselAlbumName}
+                isFullScreen={this.state.isFullScreen}
+                refImageGallery={this.imageGallery}
+                onCarouselClickClose={this.handleOnCarouselClickClose}
+              />
+            : null}
           </div>
-        {this.state.isCarouselOpen ?
-          <Carousel
-            isCarouselOpen={this.state.isCarouselOpen}
-            carouselPicturesList={this.state.carouselPicturesList}
-            carouselAlbumName={this.state.carouselAlbumName}
-            isFullScreen={this.state.isFullScreen}
-            refImageGallery={this.imageGallery}
-            onCarouselClickClose={this.handleOnCarouselClickClose}
-          />
-        : null}
-      </div>
+        </ThemeProvider>
+      </React.Fragment>
     );
   }
 }

@@ -1,16 +1,28 @@
-.Gallery {
-  text-align: center;
-}
-
 .Gallery-header {
   background-color: whitesmoke;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0.5% 1.5%;
-  font-size: calc(20px + 2vmin);
+  flex-wrap: wrap;
+  align-content: center;
   color: dimgrey;
   font-weight: lighter;
+}
+
+.Gallery-header-item {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  height: 4pc;
+  line-height: 4pc;
+}
+
+.Gallery-header-text {
+  padding-left: 6px;
+}
+
+.Gallery-header-logo {
+  opacity: 0.7;
+  filter: grayscale(0.6);
+  margin-left: 6px;
 }
 
 @keyframes fadein {
