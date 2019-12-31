@@ -16,11 +16,13 @@
     grid-row: 1;
     align-self: center;
     justify-self: center;
+    text-align: center;
     z-index: 15;
     padding: 1% 2%;
     margin: 25% 25% 25% 25%;
     font-weight: bold;
     text-transform: capitalize;
+    justify-content: center;
     color: white;
     text-shadow: 1px 1px gray;
     font-size: calc(15px + 5vmin);
