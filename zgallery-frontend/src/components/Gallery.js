@@ -12,6 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import {ThemeProvider, responsiveFontSizes} from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 let theme = createMuiTheme({
   palette: {
@@ -118,31 +119,39 @@ class Gallery extends Component {
         <ThemeProvider theme={theme}>
           <div className="Gallery">
             <header className="Gallery-header">
-                <img className="Gallery-header-logo Gallery-header-item" src={'logo192.png'} />
+                <img className="Gallery-header-logo Gallery-header-item" src={'logo192.png'} alt={''} />
                 <h1 className="Gallery-header-text Gallery-header-item">ZGallery</h1>
             </header>
-            <div className="Albums-container">
+            <Grid container
+                  spacing={0}
+                  direction="row"
+                  justify="center"
+                  alignItems="stretch"
+            >
               {!this.state.isLoading ?
                 this.state.albums.map(album =>
-                  <Album key={album.albumName}
-                         album={album}
-                         handleOnClickAlbum={this.handleOnClickAlbum}
-                  />)
+                  <Grid item key={album.albumName} xs={12} md={6}>
+                    <Album key={album.albumName}
+                           album={album}
+                           handleOnClickAlbum={this.handleOnClickAlbum}
+                    />
+                  </Grid>
+                  )
                 :
                 <div className="loader"/>
               }
-            </div>
-            {this.state.isCarouselOpen ?
-              <Carousel
-                isCarouselOpen={this.state.isCarouselOpen}
-                carouselPicturesList={this.state.carouselPicturesList}
-                carouselAlbumName={this.state.carouselAlbumName}
-                isFullScreen={this.state.isFullScreen}
-                refImageGallery={this.imageGallery}
-                onCarouselClickClose={this.handleOnCarouselClickClose}
-              />
-            : null}
+            </Grid>
           </div>
+          {this.state.isCarouselOpen ?
+            <Carousel
+              isCarouselOpen={this.state.isCarouselOpen}
+              carouselPicturesList={this.state.carouselPicturesList}
+              carouselAlbumName={this.state.carouselAlbumName}
+              isFullScreen={this.state.isFullScreen}
+              refImageGallery={this.imageGallery}
+              onCarouselClickClose={this.handleOnCarouselClickClose}
+            />
+          : null}
         </ThemeProvider>
       </React.Fragment>
     );
