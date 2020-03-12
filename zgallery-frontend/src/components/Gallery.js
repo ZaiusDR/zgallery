@@ -118,9 +118,7 @@ class Gallery extends Component {
   };
 
   handleOnCarouselClickClose = () => {
-    this.setState({isCarouselOpen: false});
     this.imageGallery.current.exitFullScreen();
-    this.setState({isFullScreen: false});
   };
 
   handleOnFullScreenChanged = () => {
