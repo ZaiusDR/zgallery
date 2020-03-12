@@ -37,7 +37,7 @@ class Gallery extends Component {
     };
     this.timerId = null;
     this.imageGallery = React.createRef();
-  };
+  }
 
   componentDidMount() {
     this.fetchAlbums();
@@ -144,7 +144,6 @@ class Gallery extends Component {
           </div>
           {this.state.isCarouselOpen ?
             <Carousel
-              isCarouselOpen={this.state.isCarouselOpen}
               carouselPicturesList={this.state.carouselPicturesList}
               carouselAlbumName={this.state.carouselAlbumName}
               isFullScreen={this.state.isFullScreen}

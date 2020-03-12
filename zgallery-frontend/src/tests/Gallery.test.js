@@ -63,7 +63,7 @@ describe('<Gallery /> Tests', () => {
     await waitUntil(() => wrapper.state('isCarouselOpen'));
     wrapper.update();
 
-    expect(wrapper.find('div.Carousel-container.Carousel-visible').length).toBe(1);
+    expect(wrapper.find('div.Carousel-container').length).toBe(1);
     done();
   })
 });

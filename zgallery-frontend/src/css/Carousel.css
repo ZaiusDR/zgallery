@@ -3,10 +3,6 @@
 }
 
 .Carousel-container {
-    display: none;
-}
-
-.Carousel-container.Carousel-visible {
     display: block;
     position: fixed;
     z-index: 20;

@@ -13,7 +13,7 @@ class Carousel extends Component {
   };
 
   render() {
-    const images = this.props.isCarouselOpen ? this.props.carouselPicturesList.map(picture => {
+    const images = this.props.carouselPicturesList.map(picture => {
       return {
         original: `${configuration.mediaServer}${this.props.carouselAlbumName}/resized/${picture}`,
         thumbnail: `${configuration.mediaServer}${this.props.carouselAlbumName}/thumbs/${picture}`,
@@ -28,10 +28,10 @@ class Carousel extends Component {
           }
         ],
         thumbnailClass: 'Carousel-thumbnail'
-      }}) : [];
+      }});
 
     return (
-      <div className={this.props.isCarouselOpen ? "Carousel-container Carousel-visible" : "Carousel-container"}>
+      <div className="Carousel-container">
         <ImageGallery
           ref={this.props.refImageGallery}
           items={images}
