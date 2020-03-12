@@ -25,6 +25,12 @@ let theme = createMuiTheme({
 });
 theme = responsiveFontSizes(theme);
 
+const screenChangeEvents = [
+  'fullscreenchange',
+  'MSFullscreenChange',
+  'mozfullscreenchange',
+  'webkitfullscreenchange',
+];
 
 class Gallery extends Component {
   constructor(props) {
@@ -40,12 +46,18 @@ class Gallery extends Component {
   }
 
   componentDidMount() {
+    screenChangeEvents.forEach((eventName) => {
+      document.addEventListener(eventName, this.handleOnFullScreenChanged);
+    });
     this.fetchAlbums();
     this.randomizeThumbs();
   }
 
   componentWillUnmount() {
     clearInterval(this.timerId);
+    screenChangeEvents.forEach((eventName) => {
+      document.removeEventListener(eventName, this.handleOnFullScreenChanged);
+    });
   }
 
   fetchAlbums() {
@@ -101,7 +113,6 @@ class Gallery extends Component {
       .then(data => {
         this.setState({carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data});
         this.imageGallery.current.fullScreen();
-        this.setState({isFullScreen: true});
       })
       .catch(error => console.log(error));
   };
@@ -110,6 +121,13 @@ class Gallery extends Component {
     this.setState({isCarouselOpen: false});
     this.imageGallery.current.exitFullScreen();
     this.setState({isFullScreen: false});
+  };
+
+  handleOnFullScreenChanged = () => {
+    this.state.isFullScreen ?
+      this.setState({isCarouselOpen: false, isFullScreen: false})
+    :
+      this.setState({isFullScreen: true})
   };
 
   render() {
