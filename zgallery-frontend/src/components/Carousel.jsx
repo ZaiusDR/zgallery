@@ -33,6 +33,16 @@ class Carousel extends Component {
         originalClass: 'Carousel-image'
       }});
 
+    const gallery = <ImageGallery
+      ref={this.props.refImageGallery}
+      items={images}
+      infinite={true}
+      showPlayButton={false}
+      showIndex={true}
+      showFullscreenButton={false}
+      renderCustomControls={this._renderCustomControls}
+    />;
+
     return (
       <div className="Carousel-container">
         { is.safari() && is.iphone()?
@@ -44,29 +54,13 @@ class Carousel extends Component {
               </div>
             </Orientation>
             <Orientation orientation='landscape' alwaysRender={false}>
-              <ImageGallery
-                ref={this.props.refImageGallery}
-                items={images}
-                infinite={true}
-                showPlayButton={false}
-                showIndex={true}
-                showFullscreenButton={false}
-                renderCustomControls={this._renderCustomControls}
-              />
+              {gallery}
             </Orientation>
           </DeviceOrientation>
           :
           <DeviceOrientation lockOrientation={'landscape'}>
             <Orientation orientation='landscape' alwaysRender={true}>
-              <ImageGallery
-                ref={this.props.refImageGallery}
-                items={images}
-                infinite={true}
-                showPlayButton={false}
-                showIndex={true}
-                showFullscreenButton={false}
-                renderCustomControls={this._renderCustomControls}
-              />
+              {gallery}
             </Orientation>
           </DeviceOrientation>
         }
