@@ -1,5 +1,12 @@
 .Carousel-thumbnail {
     vertical-align: top;
+    animation-name: fadein;
+    animation-duration: 1s;
+}
+
+.Carousel-image {
+    animation-name: fadein;
+    animation-duration: 1s;
 }
 
 .Carousel-container {
@@ -12,8 +19,26 @@
     height: 100%;
     overflow: auto;
     animation-name: fadein;
-    animation-duration: 3s;
+    animation-duration: 1s;
     background-color: rgba(0,0,0,0.7);
+}
+
+.device-orientation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.react-orientation {
+    flex-grow: 1;
+}
+
+.Rotate-Message {
+    background-color: black;
+    text-align: center;
+    height: 100%;
+    font-size: 5vh;
+    color: gray;
 }
 
 @keyframes fadein {

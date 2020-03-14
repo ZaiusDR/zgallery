@@ -13,6 +13,7 @@ import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import {ThemeProvider, responsiveFontSizes} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import is from 'is_js';
 
 let theme = createMuiTheme({
   palette: {
@@ -119,6 +120,9 @@ class Gallery extends Component {
 
   handleOnCarouselClickClose = () => {
     this.imageGallery.current.exitFullScreen();
+    if (is.safari()) {
+      this.setState({isCarouselOpen: false, isFullScreen: false})
+    }
   };
 
   handleOnFullScreenChanged = () => {
@@ -162,7 +166,6 @@ class Gallery extends Component {
             <Carousel
               carouselPicturesList={this.state.carouselPicturesList}
               carouselAlbumName={this.state.carouselAlbumName}
-              isFullScreen={this.state.isFullScreen}
               refImageGallery={this.imageGallery}
               onCarouselClickClose={this.handleOnCarouselClickClose}
             />
