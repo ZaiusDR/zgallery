@@ -113,16 +113,18 @@ class Gallery extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState({carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data});
-        this.imageGallery.current.fullScreen();
+        if (is.mobile()) {
+          this.imageGallery.current.fullScreen();
+        }
       })
       .catch(error => console.log(error));
   };
 
   handleOnCarouselClickClose = () => {
-    this.imageGallery.current.exitFullScreen();
-    if (is.safari()) {
-      this.setState({isCarouselOpen: false, isFullScreen: false})
+    if (is.mobile()) {
+      this.imageGallery.current.exitFullScreen();
     }
+    this.setState({isCarouselOpen: false, isFullScreen: false})
   };
 
   handleOnFullScreenChanged = () => {

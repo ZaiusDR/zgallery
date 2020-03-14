@@ -20,7 +20,7 @@
     overflow: auto;
     animation-name: fadein;
     animation-duration: 1s;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.9);
 }
 
 .device-orientation {
@@ -34,7 +34,7 @@
 }
 
 .Rotate-Message {
-    background-color: black;
+    background-color: rgba(0,0,0,0.8);
     text-align: center;
     height: 100%;
     font-size: 5vh;
