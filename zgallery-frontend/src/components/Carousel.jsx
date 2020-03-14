@@ -35,7 +35,7 @@ class Carousel extends Component {
 
     return (
       <div className="Carousel-container">
-        { is.safari() ?
+        { is.safari() && is.iphone()?
           <DeviceOrientation className="device-orientation" lockOrientation={'landscape'}>
             <Orientation orientation='portrait' alwaysRender={false}>
               <div className="Rotate-Message">
