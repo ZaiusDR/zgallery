@@ -124,7 +124,7 @@ class Gallery extends Component {
     if (is.mobile()) {
       this.imageGallery.current.exitFullScreen();
     }
-    this.setState({isCarouselOpen: false, isFullScreen: false})
+    this.setState({isCarouselOpen: false})
   };
 
   handleOnFullScreenChanged = () => {
@@ -169,6 +169,7 @@ class Gallery extends Component {
               carouselPicturesList={this.state.carouselPicturesList}
               carouselAlbumName={this.state.carouselAlbumName}
               refImageGallery={this.imageGallery}
+              isFullScreen={this.state.isFullScreen}
               onCarouselClickClose={this.handleOnCarouselClickClose}
             />
           : null}

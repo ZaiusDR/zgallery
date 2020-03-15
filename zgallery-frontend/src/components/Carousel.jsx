@@ -45,7 +45,7 @@ class Carousel extends Component {
 
     return (
       <div className="Carousel-container">
-        { is.safari() && is.iphone()?
+        { is.safari() && is.iphone() ?
           <DeviceOrientation className="device-orientation" lockOrientation={'landscape'}>
             <Orientation orientation='portrait' alwaysRender={false}>
               <div className="Rotate-Message">
@@ -58,11 +58,16 @@ class Carousel extends Component {
             </Orientation>
           </DeviceOrientation>
           :
-          <DeviceOrientation lockOrientation={'landscape'}>
-            <Orientation orientation='landscape' alwaysRender={true}>
-              {gallery}
-            </Orientation>
-          </DeviceOrientation>
+          <div>
+            {gallery}
+            {this.props.isFullScreen ?
+              <DeviceOrientation lockOrientation={'landscape'}>
+                <Orientation orientation='landscape' alwaysRender={true} />
+              </DeviceOrientation>
+              :
+              null
+            }
+          </div>
         }
       </div>
     )
