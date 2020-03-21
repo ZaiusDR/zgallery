@@ -1,3 +1,8 @@
+.image-gallery {
+    animation-name: fadein;
+    animation-duration: 3s;
+}
+
 .Carousel-thumbnail {
     vertical-align: top;
     animation-name: fadein;
@@ -39,6 +44,10 @@
     height: 100%;
     font-size: 5vh;
     color: gray;
+}
+
+.Rotate-Image {
+    height: 45%;
 }
 
 @keyframes fadein {

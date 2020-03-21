@@ -113,7 +113,7 @@ class Gallery extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState({carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data});
-        if (is.mobile()) {
+        if (is.mobile() && window.screen.orientation.type.includes('landscape')) {
           this.imageGallery.current.fullScreen();
         }
       })
@@ -132,6 +132,13 @@ class Gallery extends Component {
       this.setState({isCarouselOpen: false, isFullScreen: false})
     :
       this.setState({isFullScreen: true})
+  };
+
+  handleOnOrientationChanged = (orientation) => {
+    console.log(orientation);
+    if (orientation === 'landscape' && this.imageGallery.current) {
+      this.imageGallery.current.fullScreen();
+    }
   };
 
   render() {
@@ -170,6 +177,7 @@ class Gallery extends Component {
               carouselAlbumName={this.state.carouselAlbumName}
               refImageGallery={this.imageGallery}
               isFullScreen={this.state.isFullScreen}
+              onOrientationChanged={this.handleOnOrientationChanged}
               onCarouselClickClose={this.handleOnCarouselClickClose}
             />
           : null}

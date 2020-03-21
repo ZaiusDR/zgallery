@@ -3,8 +3,6 @@ import ImageGallery from 'react-image-gallery';
 import DeviceOrientation, {Orientation} from 'react-screen-orientation';
 import {configuration} from '../settings';
 
-import is from "is_js";
-
 import "react-image-gallery/styles/css/image-gallery.css";
 
 import '../css/Carousel.css';
@@ -33,42 +31,27 @@ class Carousel extends Component {
         originalClass: 'Carousel-image'
       }});
 
-    const gallery = <ImageGallery
-      ref={this.props.refImageGallery}
-      items={images}
-      infinite={true}
-      showPlayButton={false}
-      showIndex={true}
-      showFullscreenButton={false}
-      renderCustomControls={this._renderCustomControls}
-    />;
-
     return (
       <div className="Carousel-container">
-        { is.safari() && is.iphone() ?
-          <DeviceOrientation className="device-orientation" lockOrientation={'landscape'}>
+          <DeviceOrientation onOrientationChange={this.props.onOrientationChanged} className="device-orientation">
             <Orientation orientation='portrait' alwaysRender={false}>
               <div className="Rotate-Message">
-                <img src={'rotate_device.gif'} alt={'Please, rotate your device'}/>
+                <img className="Rotate-Image" src={'rotate_device.gif'} alt={'Please, rotate your device'}/>
                 <p>Please, rotate your device.</p>
               </div>
             </Orientation>
             <Orientation orientation='landscape' alwaysRender={false}>
-              {gallery}
+              <ImageGallery
+                ref={this.props.refImageGallery}
+                items={images}
+                infinite={true}
+                showPlayButton={false}
+                showIndex={true}
+                showFullscreenButton={false}
+                renderCustomControls={this._renderCustomControls}
+              />;
             </Orientation>
           </DeviceOrientation>
-          :
-          <div>
-            {gallery}
-            {this.props.isFullScreen ?
-              <DeviceOrientation lockOrientation={'landscape'}>
-                <Orientation orientation='landscape' alwaysRender={true} />
-              </DeviceOrientation>
-              :
-              null
-            }
-          </div>
-        }
       </div>
     )
   }
