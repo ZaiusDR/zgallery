@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 
+import Button from '@material-ui/core/Button';
+
 import "../css/Album.css";
 import Thumbnail from "./Thumbnail";
 
@@ -8,10 +10,10 @@ class Album extends Component {
     return(
       <React.Fragment>
         <div className="Album-container">
-          <p className="Album-name"
+          <Button className="Album-name"
              onClick={() => this.props.handleOnClickAlbum(this.props.album.albumName)}>
             {this.props.album.albumName}
-          </p>
+          </Button>
           {this.props.album.thumbs.map(thumbnail =>
             <Thumbnail key={thumbnail}
                        albumName={this.props.album.albumName}

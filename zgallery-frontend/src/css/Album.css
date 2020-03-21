@@ -18,13 +18,13 @@
     text-align: center;
     z-index: 15;
     padding: 1% 2%;
-    font-weight: bold;
-    text-transform: capitalize;
+    font-weight: bold !important;
+    text-transform: capitalize !important;
     justify-content: center;
-    color: white;
-    text-shadow: 1px 1px gray;
-    font-size: calc(15px + 5vmin);
-    background-color: rgba(0,0,0,.2);
+    color: white !important;
+    text-shadow: 1px 1px gray !important;
+    font-size: calc(15px + 5vmin) !important;
+    background-color: rgba(0,0,0,.2) !important;
     animation: fadein 3s;
 }
 
