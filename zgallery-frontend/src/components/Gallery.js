@@ -8,23 +8,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import '../css/Gallery.css';
 import '../css/spinners.css';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
-import {ThemeProvider, responsiveFontSizes} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import is from 'is_js';
-
-let theme = createMuiTheme({
-  palette: {
-    primary: purple,
-    secondary: green,
-  },
-  status: {
-    danger: 'orange',
-  },
-});
-theme = responsiveFontSizes(theme);
 
 const screenChangeEvents = [
   'fullscreenchange',
@@ -138,7 +123,6 @@ class Gallery extends Component {
     return (
       <React.Fragment>
         <CssBaseline />
-        <ThemeProvider theme={theme}>
           <div className="Gallery">
             <header className="Gallery-header">
                 <img className="Gallery-header-logo Gallery-header-item" src={'logo192.png'} alt={''} />
@@ -173,7 +157,6 @@ class Gallery extends Component {
               onCarouselClickClose={this.handleOnCarouselClickClose}
             />
           : null}
-        </ThemeProvider>
       </React.Fragment>
     );
   }

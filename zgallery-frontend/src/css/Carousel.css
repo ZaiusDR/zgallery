@@ -35,7 +35,7 @@
     border: transparent;
     z-index: 5;
     top: 0;
-    right: 6%;
+    right: 6vw;
     color: #f1f1f1;
     font-size: calc(30px + 4vmin);
     font-weight: normal;
@@ -45,7 +45,7 @@
 @media (max-width: 960px) {
     .image-gallery-slide img {
         width: auto;
-        height: 85vh;
+        height: 80ex;
     }
 
 }
