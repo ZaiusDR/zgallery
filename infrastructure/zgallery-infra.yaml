@@ -151,6 +151,10 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
 
   ZGalleryERC:
     Type: AWS::ECR::Repository
@@ -209,11 +213,29 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref ZGalleryALBTargetGroup
+        - Type: redirect
+          RedirectConfig:
+            Protocol: "HTTPS"
+            Port: "443"
+            Host: "#{host}"
+            Path: "/#{path}"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref ZGalleryALB
       Port: 80
       Protocol: HTTP
+
+  ZGalleryALBHTTPSListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ZGalleryALBTargetGroup
+      LoadBalancerArn: !Ref ZGalleryALB
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: '{{resolve:ssm:/acm/certificate/web/arn:2}}'
 
   ZGalleryRedirectFrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -227,7 +249,7 @@ Resources:
             Values:
               - !Ref ZGalleryDNS
               - !Ref ZGalleryFrontendDNS
-      ListenerArn: !Ref ZGalleryALBListener
+      ListenerArn: !Ref ZGalleryALBHTTPSListener
       Priority: 20
 
   ZGalleryRedirectBackendListenerRule:
@@ -241,7 +263,7 @@ Resources:
           HostHeaderConfig:
             Values:
               - !Ref ZGalleryBackendDNS
-      ListenerArn: !Ref ZGalleryALBListener
+      ListenerArn: !Ref ZGalleryALBHTTPSListener
       Priority: 30
 
   ZGalleryALBTargetGroup:

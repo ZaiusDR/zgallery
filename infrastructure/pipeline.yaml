@@ -454,6 +454,7 @@ Resources:
                 Resource:
                   - arn:aws:ssm:*:*:parameter/aws/service/*
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/arn
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/web/arn
               - Effect: Allow
                 Action:
                   - ecr:DescribeRepositories

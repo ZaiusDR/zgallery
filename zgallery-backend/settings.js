@@ -8,9 +8,9 @@ if (process.env.NODE_ENV === 'development') {
   };
 } else if (process.env.NODE_ENV === 'production') {
   config = {
-    corsConfig: { origin: 'http://zgallery.esuarez.info' },
+    corsConfig: { origin: 'https://zgallery.esuarez.info' },
     bucketFolder: 'prod/',
-    serverUrl: 'http://backend.zgallery.esuarez.info',
+    serverUrl: 'https://backend.zgallery.esuarez.info',
   };
 }
 

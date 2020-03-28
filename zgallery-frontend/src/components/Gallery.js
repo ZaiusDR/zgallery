@@ -47,7 +47,7 @@ class Gallery extends Component {
   }
 
   fetchAlbums() {
-    fetch(`http://${configuration.serverUrl}/api/v1/albums`)
+    fetch(`${configuration.serverUrl}/api/v1/albums`)
       .then(results => {
         return results.json();
       }).then(data => {
@@ -94,7 +94,7 @@ class Gallery extends Component {
   }
 
   handleOnClickAlbum = albumName => {
-    fetch(`http://${configuration.serverUrl}/api/v1/albums/${albumName}`)
+    fetch(`${configuration.serverUrl}/api/v1/albums/${albumName}`)
       .then(response => response.json())
       .then(data => {
         this.setState({carouselAlbumName: albumName, isCarouselOpen: true, carouselPicturesList: data});

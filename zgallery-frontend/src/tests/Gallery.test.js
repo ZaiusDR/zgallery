@@ -12,7 +12,7 @@ import {configuration} from '../settings';
 
 configure({ adapter: new Adapter() });
 
-const backendUrl = `http://${configuration.serverUrl}/api/v1/albums`;
+const backendUrl = `${configuration.serverUrl}/api/v1/albums`;
 const mediaUrl = `${configuration.mediaServer}thumb01.jpg`;
 
 describe('<Gallery /> Tests', () => {
