@@ -4,7 +4,6 @@
 }
 
 .Carousel-thumbnail {
-    vertical-align: top;
     animation-name: fadein;
     animation-duration: 1s;
 }
@@ -14,40 +13,15 @@
     animation-duration: 1s;
 }
 
-.Carousel-container {
-    display: block;
-    position: fixed;
-    z-index: 20;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    animation-name: fadein;
-    animation-duration: 1s;
-    background-color: rgba(0,0,0,0.9);
+.image-gallery-thumbnail {
+    width: 100px;
+    overflow: hidden;
+
 }
 
-.device-orientation {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.react-orientation {
-    flex-grow: 1;
-}
-
-.Rotate-Message {
-    background-color: rgba(0,0,0,0.8);
-    text-align: center;
-    height: 100%;
-    font-size: 5vh;
-    color: gray;
-}
-
-.Rotate-Image {
-    height: 45%;
+.image-gallery-thumbnail img {
+    width: auto !important;
+    height: 75px;
 }
 
 @keyframes fadein {
@@ -68,8 +42,10 @@
     transition: 0.3s;
 }
 
-@media only screen and (max-width: 700px){
-    .Carousel-container {
-        width: 100%;
+@media (max-width: 960px) {
+    .image-gallery-slide img {
+        width: auto;
+        height: 85vh;
     }
+
 }

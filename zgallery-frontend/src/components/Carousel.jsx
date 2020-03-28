@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import ImageGallery from 'react-image-gallery';
-import DeviceOrientation, {Orientation} from 'react-screen-orientation';
 import {configuration} from '../settings';
+import Dialog from '@material-ui/core/Dialog';
+
 
 import "react-image-gallery/styles/css/image-gallery.css";
 
@@ -32,27 +33,17 @@ class Carousel extends Component {
       }});
 
     return (
-      <div className="Carousel-container">
-          <DeviceOrientation onOrientationChange={this.props.onOrientationChanged} className="device-orientation">
-            <Orientation orientation='portrait' alwaysRender={false}>
-              <div className="Rotate-Message">
-                <img className="Rotate-Image" src={'rotate_device.gif'} alt={'Please, rotate your device'}/>
-                <p>Please, rotate your device.</p>
-              </div>
-            </Orientation>
-            <Orientation orientation='landscape' alwaysRender={false}>
-              <ImageGallery
-                ref={this.props.refImageGallery}
-                items={images}
-                infinite={true}
-                showPlayButton={false}
-                showIndex={true}
-                showFullscreenButton={false}
-                renderCustomControls={this._renderCustomControls}
-              />;
-            </Orientation>
-          </DeviceOrientation>
-      </div>
+      <Dialog open fullScreen={true}>
+        <ImageGallery
+          ref={this.props.refImageGallery}
+          items={images}
+          infinite={true}
+          showPlayButton={false}
+          showIndex={true}
+          showFullscreenButton={false}
+          renderCustomControls={this._renderCustomControls}
+        />
+      </Dialog>
     )
   }
 }
