@@ -237,6 +237,13 @@ Resources:
       Certificates:
         - CertificateArn: '{{resolve:ssm:/acm/certificate/web/arn:2}}'
 
+  ZGalleryBackendCertificateForListener:
+    Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
+    Properties:
+      Certificates:
+        - CertificateArn: '{{resolve:ssm:/acm/certificate/backend/arn:1}}'
+      ListenerArn: !Ref ZGalleryALBHTTPSListener
+
   ZGalleryRedirectFrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:

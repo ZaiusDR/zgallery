@@ -431,6 +431,8 @@ Resources:
                   - elasticloadbalancing:DeleteListener
                   - elasticloadbalancing:CreateRule
                   - elasticloadbalancing:DeleteRule
+                  - elasticloadbalancing:AddListenerCertificates
+                  - elasticloadbalancing:RemoveListenerCertificates
                 Resource:
                   - '*'
               - Effect: Allow
@@ -455,6 +457,7 @@ Resources:
                   - arn:aws:ssm:*:*:parameter/aws/service/*
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/arn
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/web/arn
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/acm/certificate/backend/arn
               - Effect: Allow
                 Action:
                   - ecr:DescribeRepositories
