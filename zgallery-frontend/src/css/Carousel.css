@@ -16,7 +16,7 @@
 .image-gallery-thumbnail {
     width: 100px;
     overflow: hidden;
-
+    margin-bottom: 5vh;
 }
 
 .image-gallery-thumbnail img {
@@ -44,8 +44,8 @@
 
 @media (max-width: 960px) {
     .image-gallery-slide img {
-        width: auto;
-        height: 80ex;
+        max-width: 90%;
+        height: 75ex;
     }
 
 }
