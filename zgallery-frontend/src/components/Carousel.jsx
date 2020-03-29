@@ -33,7 +33,7 @@ class Carousel extends Component {
       }});
 
     return (
-      <Dialog open fullScreen={true}>
+      <Dialog open fullScreen={true} PaperProps={{ style: {backgroundColor: 'black'} }}>
         <ImageGallery
           ref={this.props.refImageGallery}
           items={images}
