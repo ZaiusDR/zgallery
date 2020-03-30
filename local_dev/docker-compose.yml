@@ -12,6 +12,7 @@ services:
     - 3000:3000
     volumes:
     - ../zgallery-frontend:/opt/zgallery-frontend
+    stdin_open: true
   backend:
     build:
       context: .
